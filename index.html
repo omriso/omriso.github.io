@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Omri Solan's Webpage</title>
+    <style>
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: left;
+        }
+        .title-container img {
+            margin-right: 10px; /* Adjust spacing as needed */
+        }
+        .title-container h1 {
+            margin: 0; /* Remove default margin */
+        }
+        .subtitle {
+            text-align: left;
+            font-size: 1.2em;
+            /* color: rgb(31, 8, 78); */
+            font-weight: bold
+        }
+        .sparkle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: gold;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkle-animation 0.5s ease-out;
+        }
+        @keyframes sparkle-animation {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(2);
+            }
+        }
+    </style>
+
+    <!-- <style>
+        h1 {
+            text-align: center;
+        }
+    </style> -->
+</head>
+
+<body>
+    <div class="title-container">
+        <img src="Me.jpg" alt="Omri Solan" width="117" height="147.6"> <!-- Adjust width and height as needed -->
+        <h1>Omri Solan</h1>
+    </div>
+
+    <!-- <h1></h1> -->
+    <p>I am a Ph.D. student in the hebrew university under the supervision of Elon Lindenstrauss. I study homogeneous dynamics. </p>
+    <p>You can interest me in everything relating dynamics with number theory, geometry, topology and probability.</p>
+
+    <p class="subtitle">Contact</p>
+    <p>Email: omrinisan dot solan at mail dot huji dot ac dot il</p>
+    <p>Office: Ross building, floor -1, room 63</p>
+    <p class="subtitle">Publications</p>
+        <p>E. Lehrer, E. Solan, and O. N. Solan. The Value Functions of Markov Decision Processes. 
+            <b>Operations Research Letters</b>,
+            44 (2016), 587&ndash;591.</p>
+        <p>O. N. Solan, Y. Solomon and B. Weiss. On problems of Danzer and Gowers and dynamics on the space of closed subsets of Rn, 
+            <b>International Mathematics Research Notices</b>, 
+            21 (2017), 6584&ndash;6598.</p>
+        <p>L. Buhovsky, E. Solan, and O.N. Solan. Monovex Sets. 
+            <b>Studia Mathematica</b>, 
+            242:2 (2018), 165&ndash;178.</p>
+        <p>O. N. Solan. Stable and well-rounded lattices in diagonal orbits, 
+            <b>Israel Journal of Mathematics</b>, 
+            234:2 (2019), 501&ndash;519.</p>
+        <p>L. Liao, R. Shi, O.N. Solan and N. Tamam. Hausdorff dimension of weighted singular vectors, 
+            <b>Journal of the European Mathematical Society</b>, 
+            22:3 (2020), 833-875.</p>
+        <p>E. Solan, O.N. Solan, and R. Solan. Jointly Controlled Lotteries with Biased Coins, 
+            <b>Games and Economic Behavior</b>, 
+            119 (2020), 383-391.</p>
+        <p>E. Solan and O.N. Solan. Quitting Games and Linear Complementarity Problems, 
+            <b>Mathematics of Operations Research</b>, 
+            45:2 (2020), 434-454.</p>
+        <p>E. Solan and O.N. Solan. Logit Equilibrium as an Approximation of Nash Equilibrium, 
+            <b>Operations Research Letters</b>, 
+            48:3 (2020), 262-265.</p>
+        <p>E. Solan and O. N. Solan. Sunspot equilibrium in positive recursive general quitting games, 
+            <b>International Journal of Game Theory</b>, 
+            50.4 (2021): 891-909.</p>
+        <p>E. Solan and O. N. Solan. Browder&rsquo;s theorem with general parameter space, 
+            <b>Journal of Fixed Point Theory and Applications</b>, 
+            (2022) 24, 1-8.</p>
+        <p>E. Solan and O. N. Solan. Browder&rsquo;s theorem through Brouwer&rsquo;s fixed point theorem, 
+            <b>The American Mathematical Monthly</b>, 
+            (2023): 1-5.</p>
+        <p>O. N. Solan, and N.Tamam. On topologically big divergent trajectories, 
+            <b>Duke Mathematical Journal</b>, 
+            (2023): 3429-3474.</p>
+        <p>O. N. Solan and Y. Yifrach.  Tori Approximation of Families of Diagonally Invariant Measures, 
+            <b>Geometric and Functional Analysis</b>, 
+            (2023), 1354-1378.</p>
+    <p class="subtitle">Submitted for publication</p>
+        <p>O. N. Solan and N. Tamam. Quantitative instability of algebraic representations, <a href="https://https://arxiv.org/abs/2209.01475" target="_blank">arXiv:2209.01475</a>.</p>
+        <p>O. N. Solan and A. Wieser. Birkhoff generic points on curves in horospheres, <a href="https://https://arxiv.org/abs/2301.10671" target="_blank">arXiv:2301.10671</a>.</p>
+        <p>T. Meyerovich and O. N. Solan. Automatic continuity of Polynomial maps and cocycles, <a href="https://https://arxiv.org/abs/2306.15979" target="_blank">arXiv:2306.15979</a>.</p>
+        <p>O. N. Solan, Critical exponent gap and leafwise dimension, <a href="https://https://arxiv.org/abs/2404.00700" target="_blank">arXiv:2404.00700</a>.</p>
+    <p class="subtitle">Preprints</p>
+        <p>O. N. Solan. Parametric Geometry of numbers for a general flow, <a href="https://https://arxiv.org/abs/2106.01707" target="_blank">arXiv:2106.01707</a></p>
+
+        <script>
+            document.addEventListener('mousemove', function(e) {
+                var sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = e.pageX + 'px';
+                sparkle.style.top = e.pageY + 'px';
+                document.body.appendChild(sparkle);
+    
+                setTimeout(function() {
+                    sparkle.remove();
+                }, 500);
+            });
+        </script>
+</body>
+</html>
+
+
+
