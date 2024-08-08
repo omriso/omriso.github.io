@@ -7,7 +7,7 @@ layout: default
 # Publications:
 
 * E. Lehrer, E. Solan, and O. N. Solan. The Value Functions of Markov Decision Processes. **Operations Research Letters** 44 (2016), 587–591.  
-* O. N. Solan, Y. Solomon and B. Weiss. On problems of Danzer and Gowers and dynamics on the space of closed subsets of Rn, **International Mathematics Research Notices** 21 (2017), 6584–6598.  
+* O. N. Solan, Y. Solomon and B. Weiss. On problems of Danzer and Gowers and dynamics on the space of closed subsets of R<sup>n</sup>, **International Mathematics Research Notices** 21 (2017), 6584–6598.  
 * L. Buhovsky, E. Solan, and O.N. Solan. Monovex Sets. **Studia Mathematica** 242:2 (2018), 165–178.  
 * O. N. Solan. Stable and well-rounded lattices in diagonal orbits. **Israel Journal of Mathematics** 234:2 (2019), 501–519.  
 * L. Liao, R. Shi, O.N. Solan and N. Tamam. Hausdorff dimension of weighted singular vectors. **Journal of the European Mathematical Society** 22:3 (2020), 833-875.  
