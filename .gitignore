@@ -1,0 +1,4 @@
+_site/*
+*Zone.Identifier
+*.lock
+jekyll-theme-minimal-0.2.0.gem
