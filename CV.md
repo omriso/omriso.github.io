@@ -43,7 +43,12 @@ My primary research focus is on homogeneous dynamics. I leverage tools from numb
 * 2024 \- “Divergence of large dimensional diagonal orbits”, ‘Diagonal actions in the space of lattices’ workshop \- Ecole Polytechnique, Palaiseau, France.  
 * 2024 \- “Gap in critical exponents of SL2(ℝ) orbits in nonarithmetic quotients of SL2(ℂ)”, ‘Group Actions with Hyperbolicity and Measure Rigidity’ workshop \- Institut Henri Poincare, Paris, France.  
 * 2024 \- “Gap in critical exponents of SL2(ℝ) orbits in nonarithmetic quotients of SL2(ℂ)”, ‘Distribution of orbits: Arithmetics and Dynamics’ workshop \- Paxmontana Switzerland.
+* 2024 \- “Gap in critical exponents”, ‘Recent Trends in Homogeneous and Teichmuller Dynamics’
+workshop - Maryland.
+* 2024 \- “Gap in critical exponents”, Dynamical Systems Seminar - Penn State University.
+* 2024 \- “Gap in critical exponents”, Group Actions, Geometry and Dynamics - Yale University.
 
 ## **Service to the Community:**
 
 * 2015-2017 \- Trainer in the Israeli Mathematical Olympiad Program.
+* 2019-2021 \- Private tutoring of the Mathematical Olympiad.
