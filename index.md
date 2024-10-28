@@ -4,11 +4,11 @@ layout: default
 
 [On myself](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
 
-# **On Myself \- CV**
+# **On Myself**
 
-I am a Ph.D. student in the hebrew university under the supervision of Elon Lindenstrauss. I study homogeneous dynamics.
+I am a Ph.D. student at the Hebrew University of Jerusalem under the supervision of Prof. Elon Lindenstrauss. I study homogeneous dynamics.
 
-You can interest me in everything relating dynamics with number theory, geometry, topology and probability.
+You can interest me in questions related to dynamics with number theory, geometry, topology, and probability.
 
 ## Contact
 
