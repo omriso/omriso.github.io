@@ -6,15 +6,16 @@ layout: default
 
 # **Omri Nisan Solan \- CV**
 
-Einstein institute of Mathematics – Hebrew University of Jerusalem, Ph.D. student.
+Starting at Fall 2025, I will be an associate research scholar at Princeton University and a Bourgain Fellow at the Institute of Advanced Study.
 
-PDF version: [CV](./CV.pdf)
+<!-- PDF version: [CV](./CV.pdf) -->
 
 ## **Education:**
 
 * 2010 \- 2015: Bachelor of Science, Mathematics, Tel Aviv University (Summa cum laude).  
 * 2015 \- 2021: Master student at Tel Aviv university, under the supervision of Prof. Barak Weiss (Summa cum laude).  
-* 2022 \- present: Ph.D. student at the Hebrew University of Jerusalem, under the supervision of Prof. Elon Lindenstrauss.
+* 2022 \- 2025: Ph.D. student at the Hebrew University of Jerusalem, under the supervision of Prof. Elon Lindenstrauss.
+ 
 
 ## **Research Interest:**
 
