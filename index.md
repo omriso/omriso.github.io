@@ -2,9 +2,9 @@
 layout: default
 ---
 
-[On myself](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
+[Home](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
 
-# **On Myself**
+# **About me**
 
 I am a Ph.D. student at the Hebrew University of Jerusalem under the supervision of Prof. Elon Lindenstrauss. I study homogeneous dynamics.
 

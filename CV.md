@@ -2,7 +2,7 @@
 layout: default
 ---
 
-[On myself](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
+[Home](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
 
 # **Omri Nisan Solan \- CV**
 
