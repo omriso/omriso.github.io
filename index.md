@@ -6,7 +6,10 @@ layout: default
 
 # **About me**
 
-I am a Ph.D. student at the Hebrew University of Jerusalem under the supervision of Prof. Elon Lindenstrauss. I study homogeneous dynamics.
+I study homogeneous dynamics.
+
+I have finished my Ph.D. studies in the Hebrew University of Jerusalem under the supervision of Prof. Elon Lindenstrauss. 
+Starting at Fall 2025, I will be an associate research scholar at Princeton University and a Bourgain Fellow at the Institute of Advanced Study.
 
 You can interest me in questions related to dynamics with number theory, geometry, topology, and probability.
 
