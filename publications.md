@@ -21,10 +21,12 @@ layout: default
 * O. N. Solan and Y. Yifrach.  Tori Approximation of Families of Diagonally Invariant Measures. **Geometric and Functional Analysis** (2023), 1354-1378.
 * T. Meyerovich and O. N. Solan. Automatic continuity of Polynomial maps and cocycles. **Proceedings of the American Mathematical Society**.
 
+# Accepted for Publication:
+* O. N. Solan and N. Tamam. Quantitative instability of algebraic representations [arXiv:2209.01475](https://arxiv.org/abs/2209.01475).  Accepted to **Geometriae Dedicata**.
+* O. N. Solan and A. Wieser. Birkhoff generic points on curves in horospheres. [arXiv:2301.10671](https://arxiv.org/abs/2301.10671).  Accepted to **Selecta Mathematica**.
+
 # Submitted for Publication:
 
-* O. N. Solan and N. Tamam. Quantitative instability of algebraic representations [arXiv:2209.01475](https://arxiv.org/abs/2209.01475).  
-* O. N. Solan and A. Wieser. Birkhoff generic points on curves in horospheres. [arXiv:2301.10671](https://arxiv.org/abs/2301.10671).  
 * O. N. Solan, Critical exponent gap and leafwise dimension. [arXiv:2404.00700](https://arxiv.org/abs/2404.00700).
 * O. N. Solan, Orbits in Teichmüller dynamics admits a critical exponent gap. [arXiv:2411.09144](https://arxiv.org/abs/2411.09144).
 
