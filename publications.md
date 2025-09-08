@@ -20,9 +20,9 @@ layout: default
 * O. N. Solan, and N.Tamam. On topologically big divergent trajectories. **Duke Mathematical Journal** (2023), 3429-3474.
 * O. N. Solan and Y. Yifrach.  Tori Approximation of Families of Diagonally Invariant Measures. **Geometric and Functional Analysis** (2023), 1354-1378.
 * T. Meyerovich and O. N. Solan. Automatic continuity of Polynomial maps and cocycles. **Proceedings of the American Mathematical Society**.
+* O. N. Solan and N. Tamam. Quantitative instability of algebraic representations.  **Geometriae Dedicata 219** (2025), 78.
 
 # Accepted for Publication:
-* O. N. Solan and N. Tamam. Quantitative instability of algebraic representations [arXiv:2209.01475](https://arxiv.org/abs/2209.01475).  Accepted to **Geometriae Dedicata**.
 * O. N. Solan and A. Wieser. Birkhoff generic points on curves in horospheres. [arXiv:2301.10671](https://arxiv.org/abs/2301.10671).  Accepted to **Selecta Mathematica**.
 
 # Submitted for Publication:
