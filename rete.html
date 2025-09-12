@@ -1,0 +1,286 @@
+---
+layout: page
+permalink: /rate/
+title: "Image Rater"
+# OPTION A: list images explicitly (recommended for full control)
+
+# OPTION B: point to a directory and auto-collect all files in it
+# (GitHub Pages supports site.static_files; ensure images live under /assets/rate/)
+images_dir: /rate/
+---
+
+<!--
+Drop this file into your Jekyll repo (e.g., rate.html). 
+Add images either by:
+  1) Listing them in front matter under `images:` (absolute or relative paths), OR
+  2) Putting them inside `images_dir` and letting the page auto-collect them.
+Your partner can visit /rate/ and step through pictures with 👍/👎. Results are saved in the browser (localStorage), and can be copied, downloaded as CSV/JSON, or sent via email.
+-->
+
+<style>
+  .rater-wrap { max-width: 900px; margin: 0 auto; padding: 1rem; }
+  .card { background: #fff; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,.08); padding: 1.2rem; }
+  .row { display: flex; gap: 1rem; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+  .center { text-align: center; }
+  .muted { color: #6b7280; font-size: .95rem; }
+  .img-frame { position: relative; width: 100%; aspect-ratio: 4/3; background: #f3f4f6; border-radius: .75rem; overflow: hidden; display: grid; place-items: center; }
+  .img-frame img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .controls { display: flex; gap: .75rem; justify-content: center; margin-top: 1rem; }
+  button { appearance: none; border: none; border-radius: 9999px; padding: .9rem 1.2rem; font-size: 1rem; cursor: pointer; box-shadow: 0 6px 16px rgba(0,0,0,.06); transition: transform .06s ease, box-shadow .2s ease; }
+  button:active { transform: translateY(1px); }
+  .btn-like { background: #e8f5e9; }
+  .btn-skip { background: #eef2ff; }
+  .btn-dislike { background: #fdeaea; }
+  .btn-secondary { background: #f3f4f6; }
+  .btn-primary { background: #111827; color: white; }
+  .progress { height: .5rem; background: #e5e7eb; border-radius: 9999px; overflow: hidden; }
+  .bar { height: 100%; width: 0%; background: #111827; transition: width .3s; }
+  .grid-2 { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 900px){ .grid-2 { grid-template-columns: 2fr 1fr; } }
+  .stack { display: grid; gap: .5rem; }
+  .kbd { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; background: #111827; color: white; padding: .1rem .4rem; border-radius: .4rem; font-size: .85rem; }
+  .pill { display: inline-flex; align-items: center; gap:.4rem; background:#f3f4f6; padding:.35rem .6rem; border-radius:9999px; font-size:.85rem }
+  ul.clean { list-style: none; padding: 0; margin: 0; }
+  .hidden { display:none !important; }
+</style>
+
+<div class="rater-wrap">
+  <div class="row" style="margin-bottom: .5rem;">
+    <h1 style="margin:0">Image Rater</h1>
+    <div class="pill"><span id="counter">0</span>/<span id="total">0</span></div>
+  </div>
+
+  <div class="progress" aria-hidden="true"><div class="bar" id="bar"></div></div>
+
+  <div class="grid-2" style="margin-top:1rem;">
+    <div class="card" id="stage">
+      <div class="stack">
+        <div class="row">
+          <div class="stack">
+            <div class="muted">Participant</div>
+            <div class="row" style="gap:.5rem">
+              <input id="participant" type="text" placeholder="Name or ID (optional)" style="flex:1; padding:.6rem .8rem; border-radius:.6rem; border:1px solid #e5e7eb;"/>
+              <button class="btn-secondary" id="resetBtn" title="Clear progress">Reset</button>
+            </div>
+          </div>
+          <div class="stack" style="min-width: 220px;">
+            <div class="muted">Keyboard</div>
+            <div>
+              <span class="kbd" title="Like">L</span>
+              <span class="kbd" title="Dislike">D</span>
+              <span class="kbd" title="Skip / Next">Space</span>
+              <span class="kbd" title="Undo">U</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="img-frame" aria-live="polite" aria-busy="false">
+          <img id="img" alt="Picture to rate" />
+        </div>
+
+        <div class="center muted" id="imgMeta"></div>
+
+        <div class="controls">
+          <button class="btn-dislike" id="dislikeBtn" aria-label="Dislike"><span aria-hidden="true">👎</span> Dislike</button>
+          <button class="btn-skip" id="skipBtn" aria-label="Skip"><span aria-hidden="true">⏭</span> Skip</button>
+          <button class="btn-like" id="likeBtn" aria-label="Like"><span aria-hidden="true">👍</span> Like</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stack">
+        <h3 style="margin:0">Results</h3>
+        <div class="muted">Saved locally in this browser. Export when finished.</div>
+        <div class="row">
+          <button class="btn-secondary" id="copyBtn">Copy JSON</button>
+          <button class="btn-secondary" id="csvBtn">Download CSV</button>
+          <button class="btn-primary" id="emailBtn">Email Results</button>
+        </div>
+        <div class="stack">
+          <div class="muted">Session</div>
+          <ul class="clean" id="summary"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card hidden" id="done">
+    <div class="stack center">
+      <h2>All done 🎉</h2>
+      <p class="muted">Export or email the results using the buttons on the right.</p>
+      <button class="btn-primary" id="restartBtn">Restart</button>
+    </div>
+  </div>
+
+  <div class="center muted" style="margin-top:1rem;">
+    <small>Privacy note: This page is static and does not send data anywhere unless you click <em>Email Results</em>. For automatic server storage, integrate a Google Form or another backend endpoint.</small>
+  </div>
+</div>
+
+<script>
+(function(){
+  // --- Collect image list from front matter ---
+  const images = (function(){
+    {% if page.images %}
+      return [
+        {% for p in page.images %}"{{ p | relative_url }}"{% unless forloop.last %},{% endunless %}{% endfor %}
+      ];
+    {% elsif page.images_dir %}
+      {% assign files = site.static_files | where_exp: "f", "f.path contains page.images_dir" %}
+      {% assign imgs = files | sort: 'path' %}
+      return [
+        {% for f in imgs %}"{{ f.path | relative_url }}"{% unless forloop.last %},{% endunless %}{% endfor %}
+      ];
+    {% else %}
+      return [];
+    {% endif %}
+  })();
+
+  // --- State ---
+  const stateKey = `rater:${window.location.pathname}`;
+  const saved = JSON.parse(localStorage.getItem(stateKey) || '{}');
+  const state = {
+    i: saved.i || 0,
+    picks: saved.picks || [], // {index, url, choice, ts}
+    participant: saved.participant || ''
+  };
+
+  // --- Elements ---
+  const imgEl = document.getElementById('img');
+  const metaEl = document.getElementById('imgMeta');
+  const counterEl = document.getElementById('counter');
+  const totalEl = document.getElementById('total');
+  const barEl = document.getElementById('bar');
+  const summaryEl = document.getElementById('summary');
+  const doneEl = document.getElementById('done');
+  const stageEl = document.getElementById('stage');
+  const participantEl = document.getElementById('participant');
+
+  totalEl.textContent = images.length;
+  participantEl.value = state.participant;
+
+  // --- Helpers ---
+  function save(){
+    localStorage.setItem(stateKey, JSON.stringify(state));
+  }
+  function basename(path){
+    try{ return decodeURIComponent(path.split('/').pop()); }catch(e){ return path.split('/').pop(); }
+  }
+  function updateProgress(){
+    counterEl.textContent = Math.min(state.i, images.length);
+    const pct = images.length ? (state.i / images.length) * 100 : 0;
+    barEl.style.width = pct + '%';
+  }
+  function show(index){
+    if(index >= images.length){
+      stageEl.classList.add('hidden');
+      doneEl.classList.remove('hidden');
+      renderSummary();
+      updateProgress();
+      return;
+    }
+    stageEl.classList.remove('hidden');
+    doneEl.classList.add('hidden');
+    const url = images[index];
+    imgEl.src = url;
+    imgEl.onload = () => imgEl.parentElement.setAttribute('aria-busy','false');
+    imgEl.onerror = () => { metaEl.textContent = 'Failed to load image: ' + url; };
+    imgEl.parentElement.setAttribute('aria-busy','true');
+    metaEl.textContent = basename(url) + ` — ${index+1} of ${images.length}`;
+    updateProgress();
+  }
+  function pick(choice){
+    if(state.i >= images.length) return;
+    const url = images[state.i];
+    state.picks.push({ index: state.i, url, choice, ts: new Date().toISOString(), participant: state.participant || '' });
+    state.i += 1;
+    save();
+    show(state.i);
+    renderSummary();
+  }
+  function undo(){
+    const last = state.picks.pop();
+    if(last){ state.i = Math.max(0, last.index); save(); show(state.i); renderSummary(); }
+  }
+  function renderSummary(){
+    summaryEl.innerHTML = '';
+    state.picks.forEach(p => {
+      const li = document.createElement('li');
+      li.className = 'row';
+      li.innerHTML = `<span class="muted" style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${basename(p.url)}</span>
+                      <span class="pill">${p.choice}</span>`;
+      summaryEl.appendChild(li);
+    });
+  }
+  function toCSV(){
+    const headers = ['participant','timestamp','index','image_url','choice'];
+    const lines = [headers.join(',')];
+    state.picks.forEach(p => {
+      const row = [
+        (p.participant||'').replaceAll('"','""'),
+        p.ts,
+        p.index,
+        '"' + p.url.replaceAll('"','""') + '"',
+        p.choice
+      ];
+      lines.push(row.join(','));
+    });
+    return lines.join('\n');
+  }
+  function download(filename, text){
+    const blob = new Blob([text], {type: 'text/plain'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  // --- Wire up controls ---
+  document.getElementById('likeBtn').addEventListener('click', () => pick('like'));
+  document.getElementById('dislikeBtn').addEventListener('click', () => pick('dislike'));
+  document.getElementById('skipBtn').addEventListener('click', () => pick('skip'));
+  document.getElementById('copyBtn').addEventListener('click', () => {
+    const payload = { participant: state.participant||'', total: images.length, picks: state.picks };
+    const str = JSON.stringify(payload, null, 2);
+    navigator.clipboard.writeText(str).then(() => alert('Copied results to clipboard.'));
+  });
+  document.getElementById('csvBtn').addEventListener('click', () => {
+    download('ratings.csv', toCSV());
+  });
+  document.getElementById('emailBtn').addEventListener('click', () => {
+    const payload = { participant: state.participant||'', total: images.length, picks: state.picks };
+    const body = encodeURIComponent(JSON.stringify(payload));
+    const subj = encodeURIComponent('Image ratings');
+    // Replace YOUR_EMAIL below with your address before sharing
+    window.location.href = `mailto:YOUR_EMAIL@example.com?subject=${subj}&body=${body}`;
+  });
+  document.getElementById('resetBtn').addEventListener('click', () => {
+    if(confirm('Clear progress for this page?')){ localStorage.removeItem(stateKey); state.i=0; state.picks=[]; save(); show(0); renderSummary(); }
+  });
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    state.i = 0; save(); show(0);
+  });
+  participantEl.addEventListener('input', (e)=>{ state.participant = e.target.value; save(); });
+
+  window.addEventListener('keydown', (e) => {
+    if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if(e.key === 'l' || e.key === 'L') pick('like');
+    if(e.key === 'd' || e.key === 'D') pick('dislike');
+    if(e.key === 'u' || e.key === 'U') undo();
+    if(e.code === 'Space' || e.key === ' ') { e.preventDefault(); pick('skip'); }
+  });
+
+  // Warn about unexported results when leaving
+  window.addEventListener('beforeunload', function (e) {
+    if(state.picks && state.picks.length > 0 && state.i < images.length){
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+  // --- Init ---
+  renderSummary();
+  show(state.i);
+})();
+</script>
