@@ -92,7 +92,7 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   <div class="card hidden" id="done">
     <div class="stack center">
       <h2>All done 🎉</h2>
-      <p class="muted">Export or email the results using the buttons on the right.</p>
+      <p class="muted">Send Omri a printscreen of your choices!</p>
       <button class="btn-primary" id="restartBtn">Restart</button>
     </div>
   </div>
@@ -155,10 +155,10 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   }
   function show(index){
     if(index >= images.length){
-      stageEl.classList.add('hidden');
+      // stageEl.classList.add('hidden');
       doneEl.classList.remove('hidden');
-      renderSummary();
-      updateProgress();
+      // renderSummary();
+      // updateProgress();
       return;
     }
     stageEl.classList.remove('hidden');
@@ -181,10 +181,12 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
     renderSummary();
   }
   function undo(){
+    doneEl.classList.add('hidden');
     const last = state.picks.pop();
     if(last){ state.i = Math.max(0, last.index); save(); show(state.i); renderSummary(); }
   }
   function restart_omri(){
+    doneEl.classList.add('hidden');
     undo();
     undo();
     undo();
