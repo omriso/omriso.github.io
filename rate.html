@@ -84,6 +84,7 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
           <button class="btn-dislike" id="dislikeBtn" aria-label="Dislike"><span aria-hidden="true">👎</span> Dislike</button>
           <button class="btn-skip" id="skipBtn" aria-label="Skip"><span aria-hidden="true">⏭</span> Skip</button>
           <button class="btn-like" id="likeBtn" aria-label="Like"><span aria-hidden="true">👍</span> Like</button>
+          <button class="btn-undo" id="undoBtn" aria-label="Like"><span aria-hidden="true">Undo</span> Undo</button>
         </div>
       </div>
     </div>
@@ -93,9 +94,9 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
         <h3 style="margin:0">Results</h3>
         <div class="muted">Saved locally in this browser. Export when finished.</div>
         <div class="row">
-          <button class="btn-secondary" id="copyBtn">Copy JSON</button>
+          <!-- <button class="btn-secondary" id="copyBtn">Copy JSON</button>
           <button class="btn-secondary" id="csvBtn">Download CSV</button>
-          <button class="btn-primary" id="emailBtn">Email Results</button>
+          <button class="btn-primary" id="emailBtn">Email Results</button> -->
         </div>
         <div class="stack">
           <div class="muted">Session</div>
@@ -240,6 +241,7 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   document.getElementById('likeBtn').addEventListener('click', () => pick('like'));
   document.getElementById('dislikeBtn').addEventListener('click', () => pick('dislike'));
   document.getElementById('skipBtn').addEventListener('click', () => pick('skip'));
+  document.getElementById('undoBtn').addEventListener('click', () => undo());
   document.getElementById('copyBtn').addEventListener('click', () => {
     const payload = { participant: state.participant||'', total: images.length, picks: state.picks };
     const str = JSON.stringify(payload, null, 2);
