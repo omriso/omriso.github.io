@@ -205,6 +205,18 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
     const last = state.picks.pop();
     if(last){ state.i = Math.max(0, last.index); save(); show(state.i); renderSummary(); }
   }
+  function restart_omri(){
+    undo();
+    undo();
+    undo();
+    undo();
+    undo();
+    undo();
+    undo();
+    undo();
+    undo();
+    undo();
+  }
   function renderSummary(){
     summaryEl.innerHTML = '';
     state.picks.forEach(p => {
@@ -259,10 +271,10 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
     window.location.href = `mailto:YOUR_EMAIL@example.com?subject=${subj}&body=${body}`;
   });
   document.getElementById('resetBtn').addEventListener('click', () => {
-    if(confirm('Clear progress for this page?')){ localStorage.removeItem(stateKey); state.i=0; state.picks=[]; save(); show(0); renderSummary(); }
+    if(confirm('Clear progress for this page?')){ restart_omri() }
   });
   document.getElementById('restartBtn').addEventListener('click', () => {
-    state.i = 0; save(); show(0);
+    if(confirm('Clear progress for this page?')){ restart_omri() }
   });
   participantEl.addEventListener('input', (e)=>{ state.participant = e.target.value; save(); });
 
