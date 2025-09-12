@@ -56,24 +56,6 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   <div class="grid-2" style="margin-top:1rem;">
     <div class="card" id="stage">
       <div class="stack">
-        <div class="row">
-          <div class="stack">
-            <div class="muted">Participant</div>
-            <div class="row" style="gap:.5rem">
-              <input id="participant" type="text" placeholder="Name or ID (optional)" style="flex:1; padding:.6rem .8rem; border-radius:.6rem; border:1px solid #e5e7eb;"/>
-              <button class="btn-secondary" id="resetBtn" title="Clear progress">Reset</button>
-            </div>
-          </div>
-          <div class="stack" style="min-width: 220px;">
-            <div class="muted">Keyboard</div>
-            <div>
-              <span class="kbd" title="Like">L</span>
-              <span class="kbd" title="Dislike">D</span>
-              <span class="kbd" title="Skip / Next">Space</span>
-              <span class="kbd" title="Undo">U</span>
-            </div>
-          </div>
-        </div>
 
         <div class="img-frame" aria-live="polite" aria-busy="false">
           <img id="img" alt="Picture to rate" />
@@ -145,7 +127,6 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   const state = {
     i: saved.i || 0,
     picks: saved.picks || [], // {index, url, choice, ts}
-    participant: saved.participant || ''
   };
 
   // --- Elements ---
@@ -157,10 +138,8 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   const summaryEl = document.getElementById('summary');
   const doneEl = document.getElementById('done');
   const stageEl = document.getElementById('stage');
-  const participantEl = document.getElementById('participant');
 
   totalEl.textContent = images.length;
-  participantEl.value = state.participant;
 
   // --- Helpers ---
   function save(){
@@ -195,7 +174,7 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   function pick(choice){
     if(state.i >= images.length) return;
     const url = images[state.i];
-    state.picks.push({ index: state.i, url, choice, ts: new Date().toISOString(), participant: state.participant || '' });
+    state.picks.push({ index: state.i, url, choice, ts: new Date().toISOString()});
     state.i += 1;
     save();
     show(state.i);
@@ -228,11 +207,10 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
     });
   }
   function toCSV(){
-    const headers = ['participant','timestamp','index','image_url','choice'];
+    const headers = [,'timestamp','index','image_url','choice'];
     const lines = [headers.join(',')];
     state.picks.forEach(p => {
       const row = [
-        (p.participant||'').replaceAll('"','""'),
         p.ts,
         p.index,
         '"' + p.url.replaceAll('"','""') + '"',
@@ -256,7 +234,7 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   document.getElementById('skipBtn').addEventListener('click', () => pick('skip'));
   document.getElementById('undoBtn').addEventListener('click', () => undo());
   document.getElementById('copyBtn').addEventListener('click', () => {
-    const payload = { participant: state.participant||'', total: images.length, picks: state.picks };
+    const payload = { total: images.length, picks: state.picks };
     const str = JSON.stringify(payload, null, 2);
     navigator.clipboard.writeText(str).then(() => alert('Copied results to clipboard.'));
   });
@@ -264,7 +242,7 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
     download('ratings.csv', toCSV());
   });
   document.getElementById('emailBtn').addEventListener('click', () => {
-    const payload = { participant: state.participant||'', total: images.length, picks: state.picks };
+    const payload = { total: images.length, picks: state.picks };
     const body = encodeURIComponent(JSON.stringify(payload));
     const subj = encodeURIComponent('Image ratings');
     // Replace YOUR_EMAIL below with your address before sharing
@@ -276,7 +254,6 @@ Your partner can visit /rate/ and step through pictures with 👍/👎. Results 
   document.getElementById('restartBtn').addEventListener('click', () => {
     if(confirm('Clear progress for this page?')){ restart_omri() }
   });
-  participantEl.addEventListener('input', (e)=>{ state.participant = e.target.value; save(); });
 
   window.addEventListener('keydown', (e) => {
     if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
