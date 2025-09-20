@@ -1,0 +1,263 @@
+---
+layout: default
+title: Bracket City
+permalink: /bracket-city/
+---
+
+<!--
+Bracket City — a nested-riddle game for Jekyll/GitHub Pages
+How it works
+- Write a text containing bracketed riddles using the syntax: [[question | answer1; answer2; ...]]
+- Only the innermost brackets are clickable at any time. When solved, the bracket is replaced by the answer.
+- Progress auto-saves to localStorage, scoped to this page URL.
+
+Authoring tips
+- Use [[...]] pairs; inside, separate the riddle question (left) and acceptable answers (right) with a single vertical bar `|`.
+- Provide multiple acceptable answers by separating them with semicolons `;` (e.g., [[Capital of France | Paris; city of light; parís]]).
+- Whitespace and case are ignored. Punctuation is ignored for matching.
+- Avoid nested [[ ... ]] directly inside a single riddle token; nesting is naturally created by surrounding bracket pairs.
+- To force Right-to-Left layout (e.g., for Hebrew), toggle the RTL switch below.
+
+Example text (you can replace below in the <script id="bc-source"> block):
+"In the beginning there was [[a simple count | one]] thing, which led to [[a pair | two]] things, and finally to [[how many are one plus two? | three; 3]] grand ideas. Nested fun: [[outer riddle | solved outer]] with a nested bit ([[what comes after B? | C; c]])."
+-->
+
+<style>
+  .bc-container { max-width: 900px; margin: 2rem auto; padding: 1rem 1.25rem; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
+  .bc-controls { display:flex; gap:.75rem; align-items:center; justify-content:space-between; flex-wrap:wrap; margin-bottom: 1rem; }
+  .bc-controls .left, .bc-controls .right { display:flex; gap:.5rem; align-items:center; }
+  .bc-btn { border:1px solid #d1d5db; background:#f9fafb; padding:.5rem .75rem; border-radius:10px; cursor:pointer; font-size:14px; }
+  .bc-btn:hover { background:#f3f4f6; }
+  .bc-bracket { display:inline-flex; align-items:center; gap:.35rem; border:1px dashed #9ca3af; background:#f8fafc; padding:.1rem .35rem; border-radius:8px; cursor:pointer; }
+  .bc-bracket .qmark { font-weight:700; }
+  .bc-text { line-height:1.8; font-size:18px; white-space:pre-wrap; }
+  .bc-badge { display:inline-flex; align-items:center; gap:.35rem; border:1px solid #cbd5e1; background:#eef2ff; color:#334155; padding:.1rem .4rem; border-radius:999px; font-size:12px; }
+  .bc-modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,.35); display:none; align-items:center; justify-content:center; z-index:50; }
+  .bc-modal { width:min(560px, 92vw); background:#fff; border-radius:14px; box-shadow:0 10px 30px rgba(0,0,0,.15); overflow:hidden; }
+  .bc-modal header { padding:1rem 1.25rem; border-bottom:1px solid #e5e7eb; font-weight:700; }
+  .bc-modal .content { padding:1rem 1.25rem; }
+  .bc-modal .actions { display:flex; gap:.5rem; justify-content:flex-end; padding:1rem 1.25rem; border-top:1px solid #e5e7eb; }
+  .bc-input { width:100%; padding:.65rem .75rem; border:1px solid #d1d5db; border-radius:10px; font-size:16px; }
+  .bc-hint { color:#6b7280; font-size:14px; margin-top:.5rem; }
+  .bc-success { color:#065f46; background:#ecfdf5; border:1px solid #a7f3d0; padding:.4rem .6rem; border-radius:8px; font-size:14px; display:inline-block; }
+  .bc-error { color:#7f1d1d; background:#fef2f2; border:1px solid #fecaca; padding:.4rem .6rem; border-radius:8px; font-size:14px; display:inline-block; }
+  .bc-switch { display:inline-flex; align-items:center; gap:.4rem; cursor:pointer; user-select:none; }
+  .bc-switch input { appearance:none; width:36px; height:22px; border-radius:999px; background:#e5e7eb; position:relative; outline:none; transition:.2s; }
+  .bc-switch input:checked { background:#a7f3d0; }
+  .bc-switch input:before { content:""; position:absolute; width:18px; height:18px; background:#fff; border-radius:50%; left:2px; top:2px; transition:.2s; box-shadow:0 1px 2px rgba(0,0,0,.2); }
+  .bc-switch input:checked:before { left:16px; }
+  .bc-footer { margin-top:1rem; display:flex; justify-content:space-between; align-items:center; gap:.75rem; flex-wrap:wrap; color:#6b7280; font-size:14px; }
+  .bc-note { background:#f8fafc; border:1px solid #e5e7eb; border-radius:10px; padding:.6rem .75rem; }
+</style>
+
+<div class="bc-container" id="bc-root" dir="ltr">
+  <div class="bc-controls">
+    <div class="left">
+      <span class="bc-badge" id="bc-progress">Progress: 0%</span>
+      <span class="bc-badge" id="bc-remaining">Remaining riddles: 0</span>
+    </div>
+    <div class="right">
+      <label class="bc-switch" title="Toggle Right-to-Left layout">
+        <input type="checkbox" id="bc-rtl-toggle" /> <span>RTL</span>
+      </label>
+      <button class="bc-btn" id="bc-reset">Reset</button>
+      <button class="bc-btn" id="bc-export">Export text</button>
+    </div>
+  </div>
+
+  <div id="bc-text" class="bc-text"></div>
+  <div class="bc-footer">
+    <div class="bc-note">Click a <strong>? bracket</strong> to answer the innermost riddle. Correct answers replace the bracket with the solution and unlock the next layer.</div>
+    <div>Saved locally • <code>localStorage</code></div>
+  </div>
+</div>
+
+<!-- Your puzzle text: replace this block with your own story! -->
+<script type="text/plain" id="bc-source">
+In the beginning there was [[A simple count | one; 1]] thing, which led to [[A pair | two; 2]] things, and finally to [[How many are one plus two? | three; 3]] grand ideas.
+Nested fun: [[Outer riddle | solved outer]] with a nested bit ([[What comes after B? | C; c]]).
+Hebrew demo (works well with RTL): [[בירת צרפת? | פריז; paris]].
+</script>
+
+<!-- Modal -->
+<div class="bc-modal-backdrop" id="bc-modal-backdrop" role="dialog" aria-modal="true">
+  <div class="bc-modal" role="document">
+    <header id="bc-modal-title">Solve the riddle</header>
+    <div class="content">
+      <div id="bc-question" style="font-weight:600; margin-bottom:.5rem"></div>
+      <input id="bc-answer" class="bc-input" type="text" placeholder="Type your answer" />
+      <div class="bc-hint">Tip: answers are case/whitespace/punctuation insensitive. Multiple possible answers can be provided by the author.</div>
+      <div id="bc-feedback" style="margin-top:.6rem"></div>
+    </div>
+    <div class="actions">
+      <button class="bc-btn" id="bc-cancel">Cancel</button>
+      <button class="bc-btn" id="bc-submit">Check</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const el = {
+    root: document.getElementById('bc-root'),
+    text: document.getElementById('bc-text'),
+    src: document.getElementById('bc-source'),
+    progress: document.getElementById('bc-progress'),
+    remaining: document.getElementById('bc-remaining'),
+    reset: document.getElementById('bc-reset'),
+    exportBtn: document.getElementById('bc-export'),
+    rtlToggle: document.getElementById('bc-rtl-toggle'),
+    modalBackdrop: document.getElementById('bc-modal-backdrop'),
+    modalTitle: document.getElementById('bc-modal-title'),
+    question: document.getElementById('bc-question'),
+    answer: document.getElementById('bc-answer'),
+    feedback: document.getElementById('bc-feedback'),
+    submit: document.getElementById('bc-submit'),
+    cancel: document.getElementById('bc-cancel'),
+  };
+
+  const STORAGE_KEY = 'bc-state:' + location.pathname;
+
+  function loadInitialText() {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try { return JSON.parse(saved).currentText; } catch (_) {}
+    }
+    return el.src.textContent.trim();
+  }
+
+  function saveState(currentText) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ currentText }));
+  }
+
+  function normalize(s) {
+    return (s||'')
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '') // strip diacritics
+      .replace(/[\p{P}\p{S}]/gu, ' ') // remove punctuation/symbols
+      .replace(/\s+/g, ' ') // collapse spaces
+      .trim();
+  }
+
+  function parseInnermostTokens(text) {
+    // Matches innermost [[ question | answers ]] (no nested [[ ]] inside)
+    const re = /\[\[([^\[\]\|]+?)\|([^\[\]]+?)\]\]/g;
+    const tokens = []; // { id, raw, q, answers[], display }
+    let idx = 0;
+    const html = text.replace(re, (m, q, a) => {
+      const id = idx++;
+      const answers = a.split(';').map(s => s.trim()).filter(Boolean);
+      tokens.push({ id, raw: m, q: q.trim(), answers, display: '[[?]]' });
+      return `@@BC${id}@@`;
+    });
+    return { html, tokens };
+  }
+
+  function render(currentText) {
+    const { html, tokens } = parseInnermostTokens(currentText);
+    let rendered = html;
+    tokens.forEach(t => {
+      const btn = `<button class="bc-bracket" data-id="${t.id}" title="Solve riddle">
+        <span class="qmark">?</span>
+      </button>`;
+      rendered = rendered.replace(`@@BC${t.id}@@`, btn);
+    });
+    el.text.innerHTML = rendered;
+
+    // Attach listeners for each innermost token
+    tokens.forEach(t => {
+      const btn = el.text.querySelector(`.bc-bracket[data-id="${t.id}"]`);
+      if (!btn) return;
+      btn.addEventListener('click', () => openModal(t, currentText));
+    });
+
+    // Stats
+    const totalRemaining = tokens.length;
+    const totalOriginal = countAllBrackets(originalText);
+    const solved = Math.max(0, totalOriginal - totalRemaining);
+    const pct = totalOriginal ? Math.round(100 * solved / totalOriginal) : (totalRemaining ? 0 : 100);
+    el.progress.textContent = `Progress: ${pct}%`;
+    el.remaining.textContent = `Remaining riddles: ${totalRemaining}`;
+  }
+
+  function countAllBrackets(text) {
+    // Count all [[...|...]] occurrences, including nested ones across the whole string
+    const reGlobal = /\[\[[\s\S]*?\]\]/g; // rough count of any [[...]]
+    const matches = text.match(reGlobal);
+    // Filter to those that contain a | separator (valid riddles)
+    return (matches || []).filter(m => m.includes('|')).length;
+  }
+
+  // Modal logic
+  let activeToken = null;
+  let activeText = null;
+  function openModal(token, currentText) {
+    activeToken = token;
+    activeText = currentText;
+    el.modalTitle.textContent = 'Solve the riddle';
+    el.question.textContent = token.q;
+    el.answer.value = '';
+    el.feedback.textContent = '';
+    el.feedback.className = '';
+    el.modalBackdrop.style.display = 'flex';
+    setTimeout(() => el.answer.focus(), 50);
+  }
+
+  function closeModal() {
+    el.modalBackdrop.style.display = 'none';
+  }
+
+  function trySubmit() {
+    if (!activeToken) return;
+    const user = normalize(el.answer.value);
+    const ok = activeToken.answers.some(a => normalize(a) === user);
+    if (ok) {
+      el.feedback.textContent = 'Correct!';
+      el.feedback.className = 'bc-success';
+      // Replace this token's raw text with the canonical first answer (as authored)
+      const replacement = activeToken.answers[0].trim();
+      const updated = activeText.replace(activeToken.raw, replacement);
+      saveState(updated);
+      closeModal();
+      // Re-render with updated text
+      currentText = updated;
+      render(updated);
+    } else {
+      el.feedback.textContent = 'Not quite. Try again!';
+      el.feedback.className = 'bc-error';
+    }
+  }
+
+  el.submit.addEventListener('click', trySubmit);
+  el.answer.addEventListener('keydown', (e) => { if (e.key === 'Enter') trySubmit(); });
+  el.cancel.addEventListener('click', closeModal);
+  el.modalBackdrop.addEventListener('click', (e) => { if (e.target === el.modalBackdrop) closeModal(); });
+
+  // Controls
+  el.reset.addEventListener('click', () => {
+    if (confirm('Reset progress and restore the original text?')) {
+      localStorage.removeItem(STORAGE_KEY);
+      render(originalText);
+    }
+  });
+
+  el.exportBtn.addEventListener('click', () => {
+    const state = localStorage.getItem(STORAGE_KEY);
+    const text = state ? JSON.parse(state).currentText : originalText;
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'bracket-city.txt'; a.click();
+    URL.revokeObjectURL(url);
+  });
+
+  el.rtlToggle.addEventListener('change', (e) => {
+    el.root.setAttribute('dir', e.target.checked ? 'rtl' : 'ltr');
+  });
+
+  const originalText = el.src.textContent.trim();
+  const initial = loadInitialText();
+  render(initial);
+})();
+</script>
