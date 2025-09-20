@@ -74,7 +74,7 @@ Example text (you can replace below in the <script id="bc-source"> block):
 
 <!-- Your puzzle text: replace this block with your own story! -->
 <script type="text/plain" id="bc-source">
-In the beginning there was [[A simple count | one; 1]] thing, which led to [[A pair | two; 2]] things, and finally to [[How many are one plus two? | three; 3]] grand ideas.
+In the beginning there was [[A [[A simple count | one; 1]] count | one; 1]] thing, which led to [[A pair | two; 2]] things, and finally to [[How many are one plus two? | three; 3]] grand ideas.
 Nested fun: [[Outer riddle | solved outer]] with a nested bit ([[What comes after B? | C; c]]).
 Hebrew demo (works well with RTL): [[בירת צרפת? | פריז; paris]].
 </script>
@@ -82,11 +82,9 @@ Hebrew demo (works well with RTL): [[בירת צרפת? | פריז; paris]].
 <!-- Modal -->
 <div class="bc-modal-backdrop" id="bc-modal-backdrop" role="dialog" aria-modal="true">
   <div class="bc-modal" role="document">
-    <header id="bc-modal-title">Solve the riddle</header>
     <div class="content">
       <div id="bc-question" style="font-weight:600; margin-bottom:.5rem"></div>
       <input id="bc-answer" class="bc-input" type="text" placeholder="Type your answer" />
-      <div class="bc-hint">Tip: answers are case/whitespace/punctuation insensitive. Multiple possible answers can be provided by the author.</div>
       <div id="bc-feedback" style="margin-top:.6rem"></div>
     </div>
     <div class="actions">
