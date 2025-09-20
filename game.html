@@ -71,7 +71,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
   .cx-rows { display: grid; gap: .6rem; margin: 1.25rem 0; }
   .cx-row { background: var(--card); border: 1px solid #232331; border-radius: .9rem; padding: .8rem 1rem; }
   .cx-row-title { font-weight: 900; }
-  .cx-strikes { display: flex; gap: .35rem; align-items: center; }
   .cx-dot { width: 10px; height: 10px; border-radius: 99px; background: #3a3a48; }
   .cx-dot.on { background: var(--bad); }
   .cx-flex { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -87,13 +86,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
   </div>
 
   <div class="cx-flex">
-    <div class="cx-strikes" id="cx-strikes" aria-label="mistakes">
-      <span class="cx-sub" style="margin-right:.4rem">Mistakes:</span>
-      <div class="cx-dot" data-i="0"></div>
-      <div class="cx-dot" data-i="1"></div>
-      <div class="cx-dot" data-i="2"></div>
-      <div class="cx-dot" data-i="3"></div>
-    </div>
     <div class="cx-controls">
       <button class="cx-btn" id="btn-shuffle" type="button">Shuffle</button>
       <button class="cx-btn" id="btn-deselect" type="button">Deselect</button>
@@ -107,7 +99,7 @@ You can also create multiple puzzles by duplicating this file with different `pe
 
   <div class="cx-rows" id="cx-rows" aria-live="polite"></div>
   <div class="cx-status" id="cx-status"></div>
-  <div class="cx-footer">Progress saves automatically in your browser.</div>
+  <!-- <div class="cx-footer">Progress saves automatically in your browser.</div> -->
 </div>
 <div id="cx-toast" class="cx-toast" role="status" aria-live="polite">Copied!</div>
 
@@ -127,7 +119,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
   const root = document.getElementById('cx-grid');
   const rowsEl = document.getElementById('cx-rows');
   const statusEl = document.getElementById('cx-status');
-  const strikesEl = document.getElementById('cx-strikes');
   const toastEl = document.getElementById('cx-toast');
 
   const submitBtn = document.getElementById('btn-submit');
@@ -153,7 +144,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
     pool: shuffle([...words]),
     solved: [], // [{name,color,words:[...] }]
     selected: [], // words
-    mistakes: 0,
   };
 
   renderAll();
@@ -196,26 +186,11 @@ You can also create multiple puzzles by duplicating this file with different `pe
       saveState();
       // Win?
       if(state.solved.length === 4){
-        flashStatus('You solved it!');
+        flashStatus('פתרת! אני אוהב אותך!');
       }
     } else {
       // Wrong
-      state.mistakes = Math.min(4, state.mistakes + 1);
-      shakeGrid();
-      renderStrikes();
-      saveState();
-      if(state.mistakes >= 4){
-        revealAll();
-      } else {
-        // helpful hint: if 3 of 4 are same category, swap one random
-        const hint = autoSwapHint(state.selected);
-        if(hint){
-          flashStatus('Close! 3 of those belong together.');
-          // Optional: perform a swap to keep play dynamic
-        } else {
-          flashStatus('Not a group.');
-        }
-      }
+      state.selected = []; renderGrid();
     }
   }
 
@@ -225,27 +200,10 @@ You can also create multiple puzzles by duplicating this file with different `pe
     return Object.values(count).some(v=>v===3);
   }
 
-  function revealAll(){
-    // Move remaining categories to solved, preserving their colors
-    const remainingByCat = new Map();
-    state.pool.forEach(w=>{
-      const {name,color} = catMap.get(w);
-      if(!remainingByCat.has(name)) remainingByCat.set(name, { name, color, words: [] });
-      remainingByCat.get(name).words.push(w);
-    });
-    [...remainingByCat.values()].forEach(row => state.solved.push(row));
-    state.pool = [];
-    state.selected = [];
-    renderAll();
-    saveState();
-    flashStatus('Out of mistakes. Revealed the rest.');
-  }
-
   // Rendering
   function renderAll(){
     renderRows();
     renderGrid();
-    renderStrikes();
   }
 
   function renderRows(){
@@ -277,12 +235,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
     deselectBtn.disabled = state.selected.length === 0;
     shuffleBtn.disabled = state.pool.length === 0;
   }
-
-  function renderStrikes(){
-    const dots = strikesEl.querySelectorAll('.cx-dot');
-    dots.forEach((d,i)=>{ d.classList.toggle('on', i < state.mistakes); });
-  }
-
   // Helpers
   function shuffle(arr){
     const a = [...arr];
