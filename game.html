@@ -1,0 +1,328 @@
+---
+layout: default
+title: Connections
+permalink: /connections/
+# Optional unique id for saving/restoring progress. Change this when you post a new puzzle.
+puzzle_id: 2025-09-20
+# Define exactly 4 categories with 4 words each (16 total). Words must be unique across all cats.
+categories:
+  - name: Fruits
+    color: "#f6be00"
+    words: [Apple, Banana, Orange, Pear]
+  - name: Shapes
+    color: "#77dd77"
+    words: [Circle, Square, Triangle, Rectangle]
+  - name: Things that fly
+    color: "#87cefa"
+    words: [Eagle, Plane, Kite, Bat]
+  - name: Words after "rain"
+    color: "#ffb7c5"
+    words: [Bow, Drop, Forest, Storm]
+---
+
+<!--
+How to use:
+1) Save this file anywhere in your Jekyll site (e.g., `connections.html`).
+2) Edit the front matter above: change `puzzle_id`, category `name`, `color`, and 4 `words` per category.
+3) Build your site. Progress auto-saves in the browser (localStorage) keyed by puzzle_id.
+
+You can also create multiple puzzles by duplicating this file with different `permalink` and `puzzle_id`.
+-->
+
+<style>
+  :root {
+    --bg: #0b0b10;
+    --card: #13131a;
+    --muted: #a0a3ad;
+    --text: #f5f6f9;
+    --tile: #1b1b24;
+    --tile-border: #2b2b36;
+    --tile-selected: #2d325a;
+    --ok: #2ea043;
+    --bad: #cc4452;
+  }
+  .connections {
+    max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: var(--text);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  }
+  .cx-header { display: flex; align-items: baseline; gap: .75rem; }
+  .cx-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: .2px; }
+  .cx-sub { color: var(--muted); font-size: .95rem; }
+  .cx-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; margin: 1rem 0 1rem 0;
+  }
+  .cx-tile {
+    user-select: none; cursor: pointer; padding: 1rem; border-radius: .8rem; min-height: 64px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    background: var(--tile); border: 1px solid var(--tile-border); font-weight: 700;
+    transition: transform .06s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
+  }
+  .cx-tile:hover { transform: translateY(-1px); }
+  .cx-tile.selected { background: var(--tile-selected); border-color: #3b3b59; }
+  .cx-controls { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .cx-btn {
+    appearance: none; border: 1px solid #2a2a36; background: #1a1a24; color: var(--text);
+    border-radius: .7rem; padding: .7rem 1rem; font-weight: 700; cursor: pointer;
+    transition: transform .06s ease, background .15s ease, border-color .15s ease, opacity .15s ease;
+  }
+  .cx-btn:disabled { opacity: .5; cursor: not-allowed; }
+  .cx-btn.primary { background: #27273a; border-color: #36364f; }
+  .cx-status { margin: .75rem 0; color: var(--muted); }
+  .cx-rows { display: grid; gap: .6rem; margin: 1.25rem 0; }
+  .cx-row { background: var(--card); border: 1px solid #232331; border-radius: .9rem; padding: .8rem 1rem; }
+  .cx-row-title { font-weight: 900; }
+  .cx-strikes { display: flex; gap: .35rem; align-items: center; }
+  .cx-dot { width: 10px; height: 10px; border-radius: 99px; background: #3a3a48; }
+  .cx-dot.on { background: var(--bad); }
+  .cx-flex { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+  .cx-footer { color: var(--muted); font-size: .9rem; margin-top: .75rem; }
+  .cx-toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 20px; background: #1f2937; color: #fff; padding: .6rem .9rem; border-radius: .6rem; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
+  .cx-toast.show { opacity: 1; }
+</style>
+
+<div id="connections-root" class="connections">
+  <div class="cx-header">
+    <div class="cx-title">Connections</div>
+    <div class="cx-sub">Find 4 groups of 4 words with a common connection.</div>
+  </div>
+
+  <div class="cx-flex">
+    <div class="cx-strikes" id="cx-strikes" aria-label="mistakes">
+      <span class="cx-sub" style="margin-right:.4rem">Mistakes:</span>
+      <div class="cx-dot" data-i="0"></div>
+      <div class="cx-dot" data-i="1"></div>
+      <div class="cx-dot" data-i="2"></div>
+      <div class="cx-dot" data-i="3"></div>
+    </div>
+    <div class="cx-controls">
+      <button class="cx-btn" id="btn-shuffle" type="button">Shuffle</button>
+      <button class="cx-btn" id="btn-deselect" type="button">Deselect</button>
+      <button class="cx-btn primary" id="btn-submit" type="button">Submit</button>
+      <button class="cx-btn" id="btn-share" type="button">Share</button>
+      <button class="cx-btn" id="btn-reset" type="button" title="Clear saved progress for this puzzle">Reset</button>
+    </div>
+  </div>
+
+  <div class="cx-grid" id="cx-grid" role="list" aria-label="word grid"></div>
+
+  <div class="cx-rows" id="cx-rows" aria-live="polite"></div>
+  <div class="cx-status" id="cx-status"></div>
+  <div class="cx-footer">Progress saves automatically in your browser.</div>
+</div>
+<div id="cx-toast" class="cx-toast" role="status" aria-live="polite">Copied!</div>
+
+<script>
+(function(){
+  // Pull data from Jekyll front matter
+  const PAGE_DATA = {
+    puzzleId: {{ page.puzzle_id | jsonify }},
+    categories: {{ page.categories | jsonify }}
+  };
+
+  // Validate data shape
+  if (!Array.isArray(PAGE_DATA.categories) || PAGE_DATA.categories.length !== 4) {
+    console.error('Expected exactly 4 categories with 4 words each.');
+  }
+
+  const root = document.getElementById('cx-grid');
+  const rowsEl = document.getElementById('cx-rows');
+  const statusEl = document.getElementById('cx-status');
+  const strikesEl = document.getElementById('cx-strikes');
+  const toastEl = document.getElementById('cx-toast');
+
+  const submitBtn = document.getElementById('btn-submit');
+  const deselectBtn = document.getElementById('btn-deselect');
+  const shuffleBtn = document.getElementById('btn-shuffle');
+  const shareBtn = document.getElementById('btn-share');
+  const resetBtn = document.getElementById('btn-reset');
+
+  // Build master list of 16 words with category mapping
+  const words = [];
+  const catMap = new Map(); // word -> {name,color}
+  PAGE_DATA.categories.forEach((cat, idx) => {
+    cat.words.forEach(w => {
+      const word = String(w);
+      words.push(word);
+      catMap.set(word, { name: cat.name, color: cat.color || '#444' });
+    });
+  });
+
+  // Game state
+  const STORAGE_KEY = `cx:${location.pathname}:${PAGE_DATA.puzzleId || 'default'}`;
+  let state = loadState() || {
+    pool: shuffle([...words]),
+    solved: [], // [{name,color,words:[...] }]
+    selected: [], // words
+    mistakes: 0,
+  };
+
+  renderAll();
+
+  // Event handlers
+  submitBtn.addEventListener('click', onSubmit);
+  deselectBtn.addEventListener('click', () => { state.selected = []; renderGrid(); saveState(); });
+  shuffleBtn.addEventListener('click', () => { state.pool = shuffle(state.pool); renderGrid(); saveState(); });
+  shareBtn.addEventListener('click', onShare);
+  resetBtn.addEventListener('click', () => { if(confirm('Reset progress for this puzzle?')) { localStorage.removeItem(STORAGE_KEY); location.reload(); } });
+
+  function onTileClick(word){
+    const i = state.selected.indexOf(word);
+    if(i>=0){ state.selected.splice(i,1); }
+    else{
+      if(state.selected.length >= 4) return; // cap at 4
+      state.selected.push(word);
+    }
+    renderGrid();
+    saveState();
+  }
+
+  function onSubmit(){
+    if(state.selected.length !== 4){
+      flashStatus('Pick 4 words to submit.');
+      return;
+    }
+    // Check if selected are all from same category
+    const cats = new Set(state.selected.map(w => catMap.get(w).name));
+    if(cats.size === 1){
+      // Correct group
+      const catName = [...cats][0];
+      const { color } = catMap.get(state.selected[0]);
+      state.solved.push({ name: catName, color, words: [...state.selected] });
+      // remove from pool
+      state.pool = state.pool.filter(w => !state.selected.includes(w));
+      state.selected = [];
+      flashStatus('Nice! Group found.');
+      renderAll();
+      saveState();
+      // Win?
+      if(state.solved.length === 4){
+        flashStatus('You solved it!');
+      }
+    } else {
+      // Wrong
+      state.mistakes = Math.min(4, state.mistakes + 1);
+      shakeGrid();
+      renderStrikes();
+      saveState();
+      if(state.mistakes >= 4){
+        revealAll();
+      } else {
+        // helpful hint: if 3 of 4 are same category, swap one random
+        const hint = autoSwapHint(state.selected);
+        if(hint){
+          flashStatus('Close! 3 of those belong together.');
+          // Optional: perform a swap to keep play dynamic
+        } else {
+          flashStatus('Not a group.');
+        }
+      }
+    }
+  }
+
+  function autoSwapHint(sel){
+    // Returns true if exactly 3 selected belong to the same category
+    const count = sel.reduce((acc,w)=>{ const n=catMap.get(w).name; acc[n]=(acc[n]||0)+1; return acc; },{});
+    return Object.values(count).some(v=>v===3);
+  }
+
+  function revealAll(){
+    // Move remaining categories to solved, preserving their colors
+    const remainingByCat = new Map();
+    state.pool.forEach(w=>{
+      const {name,color} = catMap.get(w);
+      if(!remainingByCat.has(name)) remainingByCat.set(name, { name, color, words: [] });
+      remainingByCat.get(name).words.push(w);
+    });
+    [...remainingByCat.values()].forEach(row => state.solved.push(row));
+    state.pool = [];
+    state.selected = [];
+    renderAll();
+    saveState();
+    flashStatus('Out of mistakes. Revealed the rest.');
+  }
+
+  // Rendering
+  function renderAll(){
+    renderRows();
+    renderGrid();
+    renderStrikes();
+  }
+
+  function renderRows(){
+    rowsEl.innerHTML = '';
+    state.solved.forEach(row => {
+      const el = document.createElement('div');
+      el.className = 'cx-row';
+      el.style.borderColor = row.color;
+      el.innerHTML = `<div class="cx-row-title" style="color:${row.color}">${escapeHtml(row.name)}</div>
+        <div>${row.words.map(w=>`<span style="display:inline-block;margin:.15rem .35rem .1rem 0;padding:.25rem .5rem;border:1px solid ${row.color}33;border-radius:.5rem">${escapeHtml(w)}</span>`).join('')}</div>`;
+      rowsEl.appendChild(el);
+    });
+  }
+
+  function renderGrid(){
+    root.innerHTML = '';
+    const remaining = state.pool;
+    remaining.forEach(word => {
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'cx-tile' + (state.selected.includes(word) ? ' selected' : '');
+      tile.textContent = word;
+      tile.setAttribute('aria-pressed', state.selected.includes(word) ? 'true' : 'false');
+      tile.addEventListener('click', () => onTileClick(word));
+      root.appendChild(tile);
+    });
+    // Disable submit if not 4
+    submitBtn.disabled = state.selected.length !== 4 || state.pool.length === 0;
+    deselectBtn.disabled = state.selected.length === 0;
+    shuffleBtn.disabled = state.pool.length === 0;
+  }
+
+  function renderStrikes(){
+    const dots = strikesEl.querySelectorAll('.cx-dot');
+    dots.forEach((d,i)=>{ d.classList.toggle('on', i < state.mistakes); });
+  }
+
+  // Helpers
+  function shuffle(arr){
+    const a = [...arr];
+    for(let i=a.length-1;i>0;i--){ const j = Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+    return a;
+  }
+  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function loadState(){ try{ const s = localStorage.getItem(STORAGE_KEY); if(s){ const parsed = JSON.parse(s); /* basic guard */ if(parsed && Array.isArray(parsed.pool)) return parsed; } } catch(e){} return null; }
+  function flashStatus(msg){ statusEl.textContent = msg; }
+  function shakeGrid(){
+    root.style.transform = 'translateX(0)';
+    root.animate([{ transform: 'translateX(0)' },{ transform: 'translateX(-6px)' },{ transform: 'translateX(6px)' },{ transform: 'translateX(0)' }], { duration: 180, iterations: 1 });
+  }
+  function escapeHtml(str){ return String(str).replace(/[&<>"] /g, s=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"," ":"&nbsp;"}[s]||s)); }
+
+  function onShare(){
+    // Share emoji grid + category list
+    const palette = buildPalette();
+    const grid = [...state.solved, ...groupRemainingByCat(state.pool)].slice(0,4);
+    const catToIdx = new Map(grid.map((row,i)=>[row.name, i]));
+    const tiles = [...state.solved.flatMap(r=>r.words), ...state.pool]; // solved first, then remaining order
+    const rows = [];
+    for(let i=0;i<tiles.length;i+=4){ const chunk = tiles.slice(i,i+4); rows.push(chunk); }
+    // Build a 4x4 emoji board based on original shuffled order is tricky; we'll just show solved count and colors
+    const solvedCount = state.solved.length;
+    let text = `Connections ${PAGE_DATA.puzzleId || ''} — ${solvedCount}/4 solved`;
+    text += "\n" + state.solved.map(r=>`■`.repeat(4)).join("\n");
+    const remainingBlocks = 4 - solvedCount; if(remainingBlocks>0){ text += "\n" + Array.from({length: remainingBlocks}).map(()=>"□".repeat(4)).join("\n"); }
+    text += "\n\n" + grid.map((r,i)=>`${i+1}. ${r.name}`).join("\n");
+
+    navigator.clipboard.writeText(text).then(()=>{ showToast('Copied results to clipboard'); }).catch(()=>{ showToast('Copy failed'); });
+  }
+  function buildPalette(){
+    return PAGE_DATA.categories.map(c=>c.color || '#888');
+  }
+  function groupRemainingByCat(pool){
+    const m = new Map();
+    pool.forEach(w=>{ const {name,color}=catMap.get(w); if(!m.has(name)) m.set(name,{name,color,words:[]}); m.get(name).words.push(w); });
+    return [...m.values()];
+  }
+  function showToast(msg){ toastEl.textContent = msg; toastEl.classList.add('show'); setTimeout(()=>toastEl.classList.remove('show'), 1200); }
+})();
+</script>
