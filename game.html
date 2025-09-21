@@ -35,24 +35,14 @@ You can also create multiple puzzles by duplicating this file with different `pe
     --card: #13131a;
     --muted: #a0a3ad;
     --text: #f5f6f9;
-    --tile: #1b1b24;
+    --tile: #ff0033;
     --tile-border: #2b2b36;
-    --tile-selected: #2d325a;
+    --tile-selected: #8e97e0;
     --ok: #2ea043;
     --bad: #cc4452;
   }
-  /* RTL base */
-  .connections { direction: rtl; text-align: right; }
-  /* Keep inline English words readable on tiles */
-  .cx-tile { direction: rtl; unicode-bidi: plaintext; }
-  /* Flip header and controls ordering for RTL */
-  [dir="rtl"] .cx-header { flex-direction: row-reverse; }
-  [dir="rtl"] .cx-flex { flex-direction: row-reverse; }
-  [dir="rtl"] .cx-controls { flex-direction: row-reverse; }
-  /* Keep the mistakes dots LTR for visual consistency */
-  #cx-strikes { direction: ltr; }
-
   .connections {
+    direction: rtl;
     max-width: 900px; margin: 2rem auto; padding: 0 1rem; color: var(--text);
     font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
   }
@@ -68,7 +58,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
     background: var(--tile); border: 1px solid var(--tile-border); font-weight: 700;
     transition: transform .06s ease, background .15s ease, border-color .15s ease, box-shadow .15s ease;
   }
-  .cx-tile.locked { opacity: .9; }
   .cx-tile:hover { transform: translateY(-1px); }
   .cx-tile.selected { background: var(--tile-selected); border-color: #3b3b59; }
   .cx-controls { display: flex; gap: .5rem; flex-wrap: wrap; }
@@ -81,38 +70,26 @@ You can also create multiple puzzles by duplicating this file with different `pe
   .cx-btn.primary { background: #27273a; border-color: #36364f; }
   .cx-status { margin: .75rem 0; color: var(--muted); }
   .cx-rows { display: grid; gap: .6rem; margin: 1.25rem 0; }
-  .cx-row { background: var(--card); border: 1px solid #232331; border-radius: .9rem; padding: .8rem 1rem; }
+  .cx-row { background: var(--card); border: 1px solid #232331; border-radius: .9rem; padding: .8rem 1rem}
   .cx-row-title { font-weight: 900; }
-  .cx-strikes { display: flex; gap: .35rem; align-items: center; }
   .cx-dot { width: 10px; height: 10px; border-radius: 99px; background: #3a3a48; }
   .cx-dot.on { background: var(--bad); }
   .cx-flex { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
   .cx-footer { color: var(--muted); font-size: .9rem; margin-top: .75rem; }
   .cx-toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: 20px; background: #1f2937; color: #fff; padding: .6rem .9rem; border-radius: .6rem; opacity: 0; pointer-events: none; transition: opacity .2s ease; }
   .cx-toast.show { opacity: 1; }
-
-  /* Quiz panel */
-  .cx-quiz { display:none; background: var(--card); border: 1px solid #232331; border-radius: .9rem; padding: 1rem; margin-top: .75rem; }
-  .cx-quiz.open { display:block; }
-  .cx-quiz-q { font-weight: 800; margin-bottom: .6rem; }
-  .cx-quiz-row { display:flex; gap:.5rem; flex-wrap:wrap; }
-  .cx-input { background:#0f1116; color:var(--text); border:1px solid #2a2a36; border-radius:.6rem; padding:.6rem .8rem; min-width: 200px; }
 </style>
 
-<div id="connections-root" class="connections" dir="rtl">
+<div id="connections-root" class="connections">
   <div class="cx-header">
-    <div class="cx-title">Connections</div>
-    <div class="cx-sub">Find 4 groups of 4 words with a common connection.</div>
+    <div class="cx-title">מזל טוב!!!</div>
   </div>
 
-  <div class="cx-flex">$1</div>
-
-  <div id="cx-quiz" class="cx-quiz" aria-live="polite">
-    <div class="cx-quiz-q" id="cx-quiz-q">שאלה...</div>
-    <div class="cx-quiz-row">
-      <input id="cx-answer" class="cx-input" type="text" placeholder="הקלד/י תשובה" aria-label="תשובה">
-      <button class="cx-btn primary" id="btn-answer" type="button">בדיקה</button>
-      <button class="cx-btn" id="btn-cancel" type="button">ביטול</button>
+  <div class="cx-flex">
+    <div class="cx-controls">
+      <button class="cx-btn" id="btn-shuffle" type="button">Shuffle</button>
+      <button class="cx-btn" id="btn-deselect" type="button">Deselect</button>
+      <button class="cx-btn primary" id="btn-submit" type="button">Submit</button>
     </div>
   </div>
 
@@ -120,7 +97,7 @@ You can also create multiple puzzles by duplicating this file with different `pe
 
   <div class="cx-rows" id="cx-rows" aria-live="polite"></div>
   <div class="cx-status" id="cx-status"></div>
-  <div class="cx-footer">Progress saves automatically in your browser.</div>
+  <!-- <div class="cx-footer">Progress saves automatically in your browser.</div> -->
 </div>
 <div id="cx-toast" class="cx-toast" role="status" aria-live="polite">Copied!</div>
 
@@ -129,13 +106,7 @@ You can also create multiple puzzles by duplicating this file with different `pe
   // Pull data from Jekyll front matter
   const PAGE_DATA = {
     puzzleId: {{ page.puzzle_id | jsonify }},
-    categories: {{ page.categories | jsonify }},
-    // Optional: a map from word -> { q: string, a: string|string[] }
-    // Example to add in front matter:
-    // clues:
-    //   Apple: { q: "A common tech company's fruit logo.", a: ["Apple"] }
-    //   Banana: { q: "Long yellow fruit.", a: ["Banana"] }
-    clues: {{ page.clues | jsonify }}
+    categories: {{ page.categories | jsonify }}
   };
 
   // Validate data shape
@@ -146,7 +117,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
   const root = document.getElementById('cx-grid');
   const rowsEl = document.getElementById('cx-rows');
   const statusEl = document.getElementById('cx-status');
-  const strikesEl = document.getElementById('cx-strikes');
   const toastEl = document.getElementById('cx-toast');
 
   const submitBtn = document.getElementById('btn-submit');
@@ -157,8 +127,7 @@ You can also create multiple puzzles by duplicating this file with different `pe
 
   // Build master list of 16 words with category mapping
   const words = [];
-  const catMap = new Map();
-  const cluesMap = new Map(Object.entries(PAGE_DATA.clues || {})); // word -> {name,color}
+  const catMap = new Map(); // word -> {name,color}
   PAGE_DATA.categories.forEach((cat, idx) => {
     cat.words.forEach(w => {
       const word = String(w);
@@ -173,8 +142,6 @@ You can also create multiple puzzles by duplicating this file with different `pe
     pool: shuffle([...words]),
     solved: [], // [{name,color,words:[...] }]
     selected: [], // words
-    mistakes: 0,
-    unlocked: [] // words that have been solved via quiz
   };
 
   renderAll();
@@ -186,62 +153,9 @@ You can also create multiple puzzles by duplicating this file with different `pe
   shareBtn.addEventListener('click', onShare);
   resetBtn.addEventListener('click', () => { if(confirm('Reset progress for this puzzle?')) { localStorage.removeItem(STORAGE_KEY); location.reload(); } });
 
-  // Quiz events
-  const quizEl = document.getElementById('cx-quiz');
-  const quizQEl = document.getElementById('cx-quiz-q');
-  const ansInput = document.getElementById('cx-answer');
-  const answerBtn = document.getElementById('btn-answer');
-  const cancelBtn = document.getElementById('btn-cancel');
-  let currentQuiz = null; // {word, q}
-  answerBtn.addEventListener('click', submitAnswer);
-  cancelBtn.addEventListener('click', closeQuiz);
-  ansInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ submitAnswer(); }});
-
-  function showQuiz(word){
-    const clue = cluesMap.get(word);
-    if(!clue) return; // no quiz for this word
-    currentQuiz = { word, q: clue.q };
-    quizQEl.textContent = clue.q || 'שאלה';
-    ansInput.value = '';
-    quizEl.classList.add('open');
-    ansInput.focus();
-  }
-  function closeQuiz(){ currentQuiz = null; quizEl.classList.remove('open'); }
-  function norm(s){ return String(s).trim().toLowerCase(); }
-  function submitAnswer(){
-    if(!currentQuiz) return;
-    const clue = cluesMap.get(currentQuiz.word);
-    const user = norm(ansInput.value);
-    const answers = Array.isArray(clue.a) ? clue.a.map(norm) : [norm(clue.a ?? '')];
-    if(user && answers.includes(user)){
-      if(!state.unlocked.includes(currentQuiz.word)) state.unlocked.push(currentQuiz.word);
-      closeQuiz();
-      renderGrid();
-      saveState();
-      showToast('נכון!');
-    } else {
-      shakeGrid();
-      showToast('לא נכון');
-    }
-  } location.reload(); } });
-
   function onTileClick(word){
-    // If tile has a clue and isn't unlocked, open the quiz
-    const hasClue = cluesMap.has(word);
-    const isUnlocked = state.unlocked.includes(word) || !hasClue;
-    if(!isUnlocked){
-      showQuiz(word);
-      return;
-    }
     const i = state.selected.indexOf(word);
     if(i>=0){ state.selected.splice(i,1); }
-    else{
-      if(state.selected.length >= 4) return; // cap at 4
-      state.selected.push(word);
-    }
-    renderGrid();
-    saveState();
-  }
     else{
       if(state.selected.length >= 4) return; // cap at 4
       state.selected.push(word);
@@ -270,26 +184,11 @@ You can also create multiple puzzles by duplicating this file with different `pe
       saveState();
       // Win?
       if(state.solved.length === 4){
-        flashStatus('You solved it!');
+        flashStatus('פתרת! אני אוהב אותך!');
       }
     } else {
       // Wrong
-      state.mistakes = Math.min(4, state.mistakes + 1);
-      shakeGrid();
-      renderStrikes();
-      saveState();
-      if(state.mistakes >= 4){
-        revealAll();
-      } else {
-        // helpful hint: if 3 of 4 are same category, swap one random
-        const hint = autoSwapHint(state.selected);
-        if(hint){
-          flashStatus('Close! 3 of those belong together.');
-          // Optional: perform a swap to keep play dynamic
-        } else {
-          flashStatus('Not a group.');
-        }
-      }
+      state.selected = []; renderGrid();
     }
   }
 
@@ -299,39 +198,10 @@ You can also create multiple puzzles by duplicating this file with different `pe
     return Object.values(count).some(v=>v===3);
   }
 
-  function revealAll(){
-    // Unlock everything so words show
-    state.unlocked = [...new Set([...state.unlocked, ...state.pool])];
-    // Move remaining categories to solved, preserving their colors
-    const remainingByCat = new Map();
-    state.pool.forEach(w=>{
-      const {name,color} = catMap.get(w);
-      if(!remainingByCat.has(name)) remainingByCat.set(name, { name, color, words: [] });
-      remainingByCat.get(name).words.push(w);
-    });
-    [...remainingByCat.values()].forEach(row => state.solved.push(row));
-    state.pool = [];
-    state.selected = [];
-    renderAll();
-    saveState();
-    flashStatus('Out of mistakes. Revealed the rest.');
-  } = catMap.get(w);
-      if(!remainingByCat.has(name)) remainingByCat.set(name, { name, color, words: [] });
-      remainingByCat.get(name).words.push(w);
-    });
-    [...remainingByCat.values()].forEach(row => state.solved.push(row));
-    state.pool = [];
-    state.selected = [];
-    renderAll();
-    saveState();
-    flashStatus('Out of mistakes. Revealed the rest.');
-  }
-
   // Rendering
   function renderAll(){
     renderRows();
     renderGrid();
-    renderStrikes();
   }
 
   function renderRows(){
@@ -350,13 +220,10 @@ You can also create multiple puzzles by duplicating this file with different `pe
     root.innerHTML = '';
     const remaining = state.pool;
     remaining.forEach(word => {
-      const hasClue = cluesMap.has(word);
-      const isUnlocked = state.unlocked.includes(word) || !hasClue;
       const tile = document.createElement('button');
       tile.type = 'button';
-      tile.className = 'cx-tile' + (state.selected.includes(word) ? ' selected' : '') + (!isUnlocked ? ' locked' : '');
-      tile.textContent = isUnlocked ? word : '❓';
-      tile.setAttribute('aria-label', isUnlocked ? word : 'שאלה');
+      tile.className = 'cx-tile' + (state.selected.includes(word) ? ' selected' : '');
+      tile.textContent = word;
       tile.setAttribute('aria-pressed', state.selected.includes(word) ? 'true' : 'false');
       tile.addEventListener('click', () => onTileClick(word));
       root.appendChild(tile);
@@ -365,18 +232,7 @@ You can also create multiple puzzles by duplicating this file with different `pe
     submitBtn.disabled = state.selected.length !== 4 || state.pool.length === 0;
     deselectBtn.disabled = state.selected.length === 0;
     shuffleBtn.disabled = state.pool.length === 0;
-  });
-    // Disable submit if not 4
-    submitBtn.disabled = state.selected.length !== 4 || state.pool.length === 0;
-    deselectBtn.disabled = state.selected.length === 0;
-    shuffleBtn.disabled = state.pool.length === 0;
   }
-
-  function renderStrikes(){
-    const dots = strikesEl.querySelectorAll('.cx-dot');
-    dots.forEach((d,i)=>{ d.classList.toggle('on', i < state.mistakes); });
-  }
-
   // Helpers
   function shuffle(arr){
     const a = [...arr];

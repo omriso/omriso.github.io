@@ -1,95 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Dynamic HTML Generator</title>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-    }
+---
+layout: page
+permalink: /bracket-city-1/
+title: "עיר מכפלות פנימיות 1"
+---
+<!-- _includes/html-generator.html -->
+<!--
+Usage (any page/post):
 
-    /* Container for output and input */
-    #container {
-      display: flex;
-      flex-direction: column;
-      flex-grow: 1;
-      padding: 10px;
-      box-sizing: border-box;
-    }
+---
+layout: default
+title: Demo – HTML Generator
+---
 
-    /* Area where generated HTML will appear */
-    #output {
-      flex-grow: 1;
-      border: 1px solid #ccc;
-      padding: 10px;
-      overflow-y: auto;
-      background: #f9f9f9;
-      margin-bottom: 10px;
-    }
+{% include html-generator.html 
+   id="gen1"                       # unique id if you place multiple on a page
+   placeholder="Type here…"         # optional
+   button_label="Generate"          # optional
+   rtl=false                         # set true for right‑to‑left UI
+%}
 
-    /* Bottom bar for input */
-    #bottom-bar {
-      display: flex;
-      gap: 10px;
-    }
+Add your generator function anywhere after this include (inline or in /assets/js):
 
-    #input-text {
-      flex-grow: 1;
-      padding: 8px;
-      font-size: 16px;
-    }
 
-    #generate-btn {
-      padding: 8px 16px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <div id="container">
-    <!-- Dynamic output will appear here -->
-    <div id="output"></div>
 
-    <!-- Textbox and button at the bottom -->
-    <div id="bottom-bar">
-      <input id="input-text" type="text" placeholder="Type your input here..." />
-      <button id="generate-btn">Generate</button>
-    </div>
+Optionally, move the JS to /assets/js/html-generator.js and include it in your layout.
+-->
+
+<div class="html-generator" data-id="{{ include.id | default: 'gen' }}" {% if include.rtl %}dir="rtl"{% else %}dir="auto"{% endif %}>
+  <div class="gen-output" aria-live="polite"></div>
+  <div class="gen-bottom">
+    <textarea class="gen-input" rows="2" placeholder="{{ include.placeholder | default: 'Type your input…' }}"></textarea>
+    <button class="gen-btn" type="button">{{ include.button_label | default: 'Generate' }}</button>
   </div>
+</div>
 
-  <script>
-    // Replace this with YOUR code that generates HTML
-    function myCode(input) {
-      // Example: Wrap the input in a styled div
-      const div = document.createElement("div");
-      div.innerHTML = `<strong>Generated:</strong> ${input}`;
-      div.style.padding = "5px";
-      div.style.marginBottom = "5px";
-      div.style.background = "#e6f7ff";
-      div.style.border = "1px solid #99d6ff";
-      return div;
+<style>
+/* Scoped styles – namespaced to avoid clashing with your Jekyll theme */
+.html-generator{display:flex;flex-direction:column;gap:.75rem}
+.html-generator .gen-output{min-height:200px;border:1px solid var(--gen-border,#d9d9d9);background:var(--gen-bg,#fafafa);padding:12px;border-radius:8px;overflow:auto}
+.html-generator .gen-bottom{display:flex;gap:.5rem;align-items:flex-end}
+.html-generator .gen-input{flex:1;resize:vertical;min-height:38px;font:inherit;padding:.6rem .7rem;border:1px solid var(--gen-border,#d9d9d9);border-radius:8px;background:var(--gen-input-bg,#fff)}
+.html-generator .gen-btn{padding:.6rem 1rem;border:1px solid var(--gen-accent,#444);background:var(--gen-accent,#444);color:#fff;border-radius:8px;cursor:pointer}
+.html-generator .gen-btn:disabled{opacity:.6;cursor:not-allowed}
+/* Optional card style for demo generator */
+.html-generator .gen-card{padding:.5rem .7rem;margin:0 0 .5rem 0;border:1px solid #cfe6ff;background:#f3f9ff;border-radius:8px}
+</style>
+
+
+<script>
+  // REQUIRED: plug YOUR code here. It must accept a string and return either:
+  // 1) a DOM Node, or 2) an HTML string.
+  // Example placeholder implementation:
+  window.myGenerator = function (input) {
+    // Return a Node example
+    const box = document.createElement('div');
+    box.className = 'gen-card';
+    box.innerHTML = `<strong>Generated:</strong> ${input.replace(/</g,'&lt;').replace(/>/g,'&gt;')}`;
+    return box;
+  };
+</script>
+
+
+<script>
+(function(){
+  const root = document.currentScript.previousElementSibling.previousElementSibling; // <div.html-generator>
+  const output = root.querySelector('.gen-output');
+  const textarea = root.querySelector('.gen-input');
+  const btn = root.querySelector('.gen-btn');
+
+  function toNode(result){
+    if(result instanceof Node) return result;
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = String(result || '');
+    // If multiple top-level nodes, keep them together
+    const frag = document.createDocumentFragment();
+    Array.from(wrapper.childNodes).forEach(n=>frag.appendChild(n));
+    return frag;
+  }
+
+  function run(){
+    const val = textarea.value.trim();
+    if(!val) return;
+    try{
+      if(typeof window.myGenerator !== 'function'){
+        console.warn('myGenerator(input) is not defined. Using a basic fallback.');
+        window.myGenerator = function(s){
+          const p = document.createElement('p');
+          p.textContent = s; return p;
+        };
+      }
+      const res = window.myGenerator(val);
+      const node = toNode(res);
+      // Insert at the TOP (newest first)
+      if(output.firstChild){
+        output.insertBefore(node, output.firstChild);
+      } else {
+        output.appendChild(node);
+      }
+      textarea.value = '';
+      textarea.focus();
+    } catch(err){
+      const errBox = document.createElement('pre');
+      errBox.className = 'gen-card';
+      errBox.textContent = 'Error: ' + err.message;
+      output.insertBefore(errBox, output.firstChild);
     }
+  }
 
-    // Hook up button click
-    document.getElementById("generate-btn").addEventListener("click", () => {
-      const inputText = document.getElementById("input-text").value.trim();
-      if (inputText === "") return;
+  btn.addEventListener('click', run);
+  textarea.addEventListener('keydown', (e)=>{
+    // Enter to submit, Shift+Enter for newline
+    if(e.key === 'Enter' && !e.shiftKey){
+      e.preventDefault();
+      run();
+    }
+  });
+})();
+</script>
 
-      // Run your code to generate HTML
-      const result = myCode(inputText);
 
-      // Add result to the top of the output area
-      const outputDiv = document.getElementById("output");
-      outputDiv.insertBefore(result, outputDiv.firstChild);
-
-      // Clear the input box
-      document.getElementById("input-text").value = "";
-    });
-  </script>
-</body>
-</html>
