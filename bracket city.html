@@ -167,15 +167,6 @@ class BracketCity {
   ];
 
   bc.addLines(rules);
-
-  // Show the built tree in console for quick verification:
-  console.log(bc.toString());
-  // If you want it on the page:
-  const pre = document.createElement('pre');
-  pre.textContent = bc.toString();
-  document.body.appendChild(pre);
-  // Expose for further tinkering in the console:
-  window.BracketCity = BracketCity;
   window.bc = bc;
 })();
   
