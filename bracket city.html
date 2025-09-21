@@ -321,10 +321,9 @@ window.myGenerator = function (input){
 
 <script>
 (function(){
-  const root = document.currentScript.previousElementSibling.previousElementSibling; // <div.html-generator>
-  const output = root.querySelector('.gen-output');
-  const textarea = root.querySelector('.gen-input');
-  const btn = root.querySelector('.gen-btn');
+  const output = document.getElementById("gen-output");
+  const textarea = document.getElementById("gen-input");
+  const btn = document.getElementById("gen-btn");
 
   function toNode(result){
     if(result instanceof Node) return result;
