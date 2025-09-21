@@ -335,6 +335,11 @@ window.myGenerator = function (input){
     return frag;
   }
 
+
+  const node = toNode(questionStylePrint(window.bc.root));
+  output.innerHTML = ""
+  output.appendChild(node);
+  
   function run(){
     const val = textarea.value.trim();
     if(!val) return;
