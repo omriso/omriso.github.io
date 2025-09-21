@@ -152,7 +152,7 @@ class BracketCity {
   const bc = new BracketCity("מזל");
 
   const rules = [
-    "מזל = הגורל הטוב שלה הוא להיות בתולה (6 אותיות)",
+    "מזל = הגורל הטוב שלה הוא להיות בתולה (3 אותיות)",
     "גורל = גבעות שמנווטים בהן, מצפון לבאר שבע",
     "הטוב = ___ הרע והמכוער",
     "בתולה = שלא קיימה יחסי מין",
@@ -262,15 +262,15 @@ function questionStylePrint(node) {
 // })();
 window.myGenerator = function (input){
     ret = window.bc.get_answer(input)
-    now_done = !window.bc.root.children
+    now_done = window.bc.root.children.length == 0
     if (now_done && ret){
-        return questionStylePrint(window.bc.root) + "       - זו התשובה היומית! מזל טוב!!!"
+        return questionStylePrint(window.bc.root) + "<br><br>זו התשובה היומית! מזל טוב!!!"
     }
     if (now_done && !ret){
-        return questionStylePrint(window.bc.root) + "       - זו עדיין התשובה היומית! מזל טוב!!!"
+        return questionStylePrint(window.bc.root) + "<br><br>זו עדיין התשובה היומית! עדיין מזל טוב!!!"
     }
     if (!now_done && !ret){
-        return questionStylePrint(window.bc.root) + "       - לא נכון"
+        return questionStylePrint(window.bc.root) + "<br><br>לא נכון"
     }
     if (!now_done && ret){
         return questionStylePrint(window.bc.root)
