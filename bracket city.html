@@ -349,11 +349,9 @@ window.myGenerator = function (input){
       const res = window.myGenerator(val);
       const node = toNode(res);
       // Insert at the TOP (newest first)
-      if(output.firstChild){
-        output.insertBefore(node, output.firstChild);
-      } else {
-        output.appendChild(node);
-      }
+      if (!block.children.length){block.removeChild(block.children[0]);}
+      output.appendChild(node);
+      
       textarea.value = '';
       textarea.focus();
     } catch(err){
