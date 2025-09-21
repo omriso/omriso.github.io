@@ -338,7 +338,7 @@ window.myGenerator = function (input){
   function run(){
     const val = textarea.value.trim();
     if(!val) return;
-    try{
+    // try{
       if(typeof window.myGenerator !== 'function'){
         console.warn('myGenerator(input) is not defined. Using a basic fallback.');
         window.myGenerator = function(s){
@@ -354,12 +354,12 @@ window.myGenerator = function (input){
       
       textarea.value = '';
       textarea.focus();
-    } catch(err){
-      const errBox = document.createElement('pre');
-      errBox.className = 'gen-card';
-      errBox.textContent = 'Error: ' + err.message;
-      output.insertBefore(errBox, output.firstChild);
-    }
+    // } catch(err){
+    //   const errBox = document.createElement('pre');
+    //   errBox.className = 'gen-card';
+    //   errBox.textContent = 'Error: ' + err.message;
+    //   output.insertBefore(errBox, output.firstChild);
+    // }
   }
 
   btn.addEventListener('click', run);
