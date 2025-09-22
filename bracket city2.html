@@ -297,6 +297,7 @@ window.myGenerator = function (input){
 --gen-input-bg: #fff;
 --gen-accent: #444;
 --gen-radius: 12px;
+--gen-text: #000;
 }
 @media (prefers-color-scheme: dark){
 :root{
@@ -304,6 +305,7 @@ window.myGenerator = function (input){
 --gen-bg:#111;
 --gen-input-bg:#1a1a1a;
 --gen-accent:#888;
+--gen-text: #fff;
 }
 }
 
@@ -317,6 +319,7 @@ min-height: 40vh; /* roomy on phones */
 max-height: 60vh;
 border:1px solid var(--gen-border);
 background:var(--gen-bg);
+color:var(--gen-text);
 padding:12px;
 border-radius:var(--gen-radius);
 overflow:auto;
