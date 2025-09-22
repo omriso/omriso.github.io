@@ -291,15 +291,50 @@ window.myGenerator = function (input){
 
 <style>
 /* Scoped styles – namespaced to avoid clashing with your Jekyll theme */
+/* Mobile-first, theme-friendly, RTL-aware */
+:root{
+--gen-border: #d9d9d9;
+--gen-bg: #fafafa;
+--gen-input-bg: #fff;
+--gen-accent: #444;
+--gen-radius: 12px;
+}
+@media (prefers-color-scheme: dark){
+:root{
+--gen-border:#333;
+--gen-bg:#111;
+--gen-input-bg:#1a1a1a;
+--gen-accent:#888;
+}
+}
+
+
 .html-generator{display:flex;flex-direction:column;gap:.75rem}
-.html-generator .gen-output{min-height:200px;border:1px solid var(--gen-border,#d9d9d9);background:var(--gen-bg,#fafafa);padding:12px;border-radius:8px;overflow:auto}
-.html-generator .gen-bottom{display:flex;gap:.5rem;align-items:flex-end}
-.html-generator .gen-input{flex:1;resize:vertical;min-height:38px;font:inherit;padding:.6rem .7rem;border:1px solid var(--gen-border,#d9d9d9);border-radius:8px;background:var(--gen-input-bg,#fff)}
-.html-generator .gen-btn{padding:.6rem 1rem;border:1px solid var(--gen-accent,#444);background:var(--gen-accent,#444);color:#fff;border-radius:8px;cursor:pointer}
-.html-generator .gen-btn:disabled{opacity:.6;cursor:not-allowed}
-/* Optional card style for demo generator */
-.html-generator .gen-card{padding:.5rem .7rem;margin:0 0 .5rem 0;border:1px solid #cfe6ff;background:#f3f9ff;border-radius:8px}
-/* Blue highlight for leaf nodes */
+
+
+/* Output area scrolls; keep bottom bar visible on phones */
+.html-generator .gen-output{
+min-height: 40vh; /* roomy on phones */
+max-height: 60vh;
+border:1px solid var(--gen-border);
+background:var(--gen-bg);
+padding:12px;
+border-radius:var(--gen-radius);
+overflow:auto;
+-webkit-overflow-scrolling: touch;
+}
+
+
+/* Sticky bottom input on mobile; respects safe-area insets */
+.html-generator .gen-bottom{
+position: sticky; bottom: 0; /* pins to bottom of scroll container */
+display:flex; flex-direction:column; gap:.5rem;
+background: color-mix(in srgb, var(--gen-bg) 92%, transparent);
+padding: .5rem; padding-bottom: calc(.5rem + env(safe-area-inset-bottom));
+border: 1px solid var(--gen-border);
+border-radius: var(--gen-radius);
+backdrop-filter: saturate(120%) blur(4px);
+
 .bc-leaf { color: rgb(0, 0, 88); font-weight: 600; }
 /* Optional: monospaced block to visualize the final printed string */
 .bc-print { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
