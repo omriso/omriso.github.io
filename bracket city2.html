@@ -284,8 +284,8 @@ window.myGenerator = function (input){
 <div class="html-generator" data-id="{{ include.id | default: 'gen' }}" {% if include.rtl %}dir="rtl"{% else %}dir="auto"{% endif %}>
   <div class="gen-output" id="gen-output" aria-live="polite"></div>
   <div class="gen-bottom">
-    <textarea class="gen-input" id="gen-input" rows="2" placeholder="{{ include.placeholder | default: 'Type your input…' }}"></textarea>
-    <button class="gen-btn" id="gen-btn" type="button">{{ include.button_label | default: 'Generate' }}</button>
+    <textarea class="gen-input" id="gen-input" rows="2" placeholder="{{ include.placeholder | default: 'כתוב תשובה' }}"></textarea>
+    <button class="gen-btn" id="gen-btn" type="button">{{ include.button_label | default: 'נסה!' }}</button>
   </div>
 </div>
 
