@@ -287,8 +287,8 @@ window.myGenerator = function (input){
 <div class="html-generator" data-id="{{ include.id | default: 'gen' }}" {% if include.rtl %}dir="rtl"{% else %}dir="auto"{% endif %}>
   <div class="gen-output" id="gen-output" aria-live="polite"></div>
   <div class="gen-bottom">
-    <textarea class="gen-input" id="gen-input" rows="2" placeholder="{{ include.placeholder | default: 'כתוב תשובה' }}"></textarea>
-    <button class="gen-btn" id="gen-btn" type="button">{{ include.button_label | default: 'נסה!' }}</button>
+    <textarea class="gen-input" id="gen-input" placeholder="{{ include.placeholder | default: 'כתוב תשובה' }}"></textarea>
+    <!-- <button class="gen-btn" id="gen-btn" type="button">{{ include.button_label | default: 'נסה!' }}</button> -->
   </div>
 </div>
 
@@ -326,6 +326,12 @@ border-radius:var(--gen-radius);
 overflow:auto;
 -webkit-overflow-scrolling: touch;
 font-size: 300%;
+}
+.html-generator .gen-input{
+  font-size: 300%;
+  line-height: 1.4; /* Keeps the text readable */
+  padding: 1.5rem 2rem; /* Increase padding to match the larger text */
+  min-height: 120px; 
 }
 
 
