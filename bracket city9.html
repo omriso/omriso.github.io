@@ -1,0 +1,427 @@
+---
+layout: page
+permalink: /bracket-city-8/
+title: "עיר מכפלות פנימיות 8"
+---
+
+
+<script>
+/**
+ * A node in the Bracket City tree.
+ * - string: the display string (root: initial string; children: question)
+ * - answers: array of possible answers (empty for root)
+ * - children: array of child nodes
+ */
+class BCNode {
+  constructor(string, answers = []) {
+    this.string = String(string);
+    this.answers = Array.isArray(answers) ? answers.slice() : [];
+    this.children = [];
+  }
+}
+
+class BracketCity {
+  /**
+   * @param {string} initialString - the root's string
+   */
+  constructor(initialString) {
+    if (typeof initialString !== 'string') {
+      throw new TypeError('initialString must be a string');
+    }
+    this.root = new BCNode(initialString);
+  }
+
+  /**
+   * Add one rule line of the form: "a1, a2, ... = question".
+   * Finds the FIRST node (BFS) whose string contains a1 and attaches a new child.
+   * @param {string} line
+   * @returns {BCNode|null} the newly created node or null if no parent matched
+   */
+  addLine(line) {
+    if (typeof line !== 'string') return null;
+    const parsed = BracketCity.parseRuleLine(line);
+    if (!parsed) return null;
+    const { answers, question } = parsed;
+    const anchor = answers[0]; // answer1
+
+    // BFS through nodes to find first with string containing answer1
+    const queue = [this.root];
+    while (queue.length) {
+      const node = queue.shift();
+      if (node.string.includes(anchor)) {
+        const child = new BCNode(question, answers);
+        node.children.push(child);
+        return child;
+      }
+      for (const c of node.children) queue.push(c);
+    }
+    // No parent found; spec says "first one that contains answer1"—if none, we skip.
+    return null;
+  }
+
+  /**
+   * Add many lines at once.
+   * Returns an array of results: { line, node } where node is the created node or null.
+   * @param {string[]} lines
+   */
+  addLines(lines) {
+    return lines.map(line => ({ line, node: this.addLine(line) }));
+  }
+
+  /**
+   * Utility: parse "a1, a2, ... = question"
+   * Returns {answers: string[], question: string} or null if malformed.
+   */
+  static parseRuleLine(line) {
+    const eqIdx = line.indexOf('=');
+    if (eqIdx === -1) return null;
+
+    const left = line.slice(0, eqIdx).trim();
+    const right = line.slice(eqIdx + 1).trim();
+
+    if (!left || !right) return null;
+
+    // Split answers by comma, trim whitespace, ignore empties
+    const answers = left
+      .split(',')
+      .map(s => s.trim())
+      .filter(s => s.length > 0);
+
+    if (answers.length === 0) return null;
+
+    return { answers, question: right };
+  }
+
+  /**
+   * Walk the tree (preorder) and invoke a callback for each node.
+   * @param {(node: BCNode, depth: number, parent: BCNode|null) => void} visit
+   */
+  traverse(visit) {
+    const dfs = (node, depth, parent) => {
+      visit(node, depth, parent);
+      for (const c of node.children) dfs(c, depth + 1, node);
+    };
+    dfs(this.root, 0, null);
+  }
+
+  /**
+   * Produce a simple text representation (for debugging).
+   */
+  toString() {
+    const lines = [];
+    this.traverse((node, depth) => {
+      const indent = '  '.repeat(depth);
+      const ans = node.answers.length ? ` [answers: ${node.answers.join(', ')}]` : '';
+      lines.push(`${indent}- ${node.string}${ans}`);
+    });
+    return lines.join('\n');
+  }
+
+  get_answer(word){
+    if (typeof word !== 'string' || !word.trim()) return false;
+    const target = word.trim();
+
+    // BFS to find parent-child pair
+    const queue = [{ parent: null, node: this.root }];
+    while (queue.length) {
+      const { parent, node } = queue.shift();
+
+      // If node is a leaf, check its answers
+      if (node.children.length === 0) {
+        if (node.answers.includes(target)) {
+          if (parent) {
+            // Remove this node from parent's children
+            parent.children = parent.children.filter(c => c !== node);
+            return true;
+          }
+          return false; // root can't be deleted
+        }
+      }
+
+      // enqueue children
+      for (const c of node.children) {
+        queue.push({ parent: node, node: c });
+      }
+    }
+    return false; // no match found
+  }
+}
+
+/* ---------- Example usage ---------- */
+(function demo() {
+  const bc = new BracketCity("אלוני");
+
+  const rules = [
+"ילדים = מסתפקים בלימודים בניו הייבן, זה שמחה (5 אותיות)",
+"הייב = מערכת לתת לחיילים תרגילים",
+"קים = ___ ג'ונג און 💣💥",
+"מס = תיק => ___ => טיק, הכנסה",
+"רגיל = לא משונה, לא נדיר",
+"שונ, שון = הבן זוג הסודי שלך",
+"נדיר, נאדיר = הנקודה הנמוכה בכיפת השמיים (אתה לא רואה אותה!)",
+"בלי = - צריך לבוא בחולצה מכופתרת? - אפשר ___",
+"מודי = ערנות מתמדת!",
+"חולצה = ___ מטיילת בוואדי",
+"שמחה = מפגין שביעות רצון (4 אותיות)",
+ "ך לבו, כלבו = אפשר לקנות שם מחשבים, יין, מה לא?",
+"הבן = קלוט את ההסבר הזה",
+"כופת = קושר בחבלים",
+"נמוכ, נמוך, נמוכים = פיטר דינקלג' וים המלח",
+  ];
+
+  bc.addLines(rules);
+  window.bc = bc;
+})();
+  
+function escapeHTML(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+/** Replace the first occurrence of 'needle' in 'haystack' with 'replacement'. */
+function replaceFirst(haystack, needle, replacement) {
+  const idx = haystack.indexOf(needle);
+  if (idx === -1) return haystack; // if somehow not found, leave unchanged
+  return haystack.slice(0, idx) + replacement + haystack.slice(idx + needle.length);
+}
+
+/**
+ * Recursively produce the question-style-printing for a node.
+ * Returns an HTML string (safe for innerHTML).
+ * Leaf nodes are wrapped in <span class="bc-leaf"> ... </span>.
+ * Non-leaf nodes: each child's first answer is replaced (first occurrence) by [ childPrinted ].
+ */
+function questionStylePrint(node) {
+  // Base string (escape for safety; we’ll insert bracketed HTML later)
+  let rendered = escapeHTML(node.string);
+
+  // Leaf: color it blue and done
+  if (!node.children || node.children.length === 0) {
+    return `<span class="bc-leaf">${rendered}</span>`;
+  }
+
+  // Non-leaf: process children in order
+  for (const child of node.children) {
+    if (!child.answers || child.answers.length === 0) continue; // defensive
+    const anchor = child.answers[0];
+
+    // Child's recursive printed HTML (already bracketed by us below)
+    const childPrinted = questionStylePrint(child);
+    const bracketed = `[${childPrinted}]`;
+
+    // We must find/replace the FIRST occurrence of the (raw) anchor in the current *rendered*.
+    // Note: 'rendered' currently contains HTML entities for <, >, &, but anchors are raw text.
+    // To handle safely, we search in the *textual* space, so we need to work in parallel:
+    // Approach: since we only escaped &, <, >, and anchors are typical text, we can search for
+    // the escaped version of anchor inside 'rendered'.
+    const anchorEscaped = escapeHTML(anchor);
+
+    const idx = rendered.indexOf(anchorEscaped);
+    if (idx === -1) {
+      // If not found (very unlikely due to construction), we leave as-is.
+      continue;
+    }
+
+    // Do the replacement inside the HTML string
+    rendered =
+      rendered.slice(0, idx) +
+      bracketed +
+      rendered.slice(idx + anchorEscaped.length);
+  }
+
+  return rendered;
+}
+
+// // --- attach to the earlier BracketCity class for convenience ---
+// if (typeof window !== 'undefined' && window.BracketCity) {
+//   window.BracketCity.prototype.questionStylePrint = function () {
+//     return questionStylePrint(this.root);
+//   };
+// }
+
+/* ---------- Tiny demo (works with the earlier demo tree) ---------- */
+// (function demoPrint() {
+//   if (!window.BracketCity) return;
+//   // Build the same demo tree as before:
+//   const bc = new BracketCity("Start with this initial string containing abc and xyz.");
+//   const rules = [
+//     "abc, def = What is the riddle for abc/def?",
+//     "xyz, qqq = Question that anchors on xyz?",
+//     "def, ghi = A follow-up that anchors on 'def' (first answer).",
+//     "qqq, zzz = Anchors on 'qqq' under the xyz-branch."
+//   ];
+//   bc.addLines(rules);
+
+//   // Show the question-style result on the page
+//   const container = document.createElement('div');
+//   container.className = 'bc-print';
+//   container.innerHTML = bc.questionStylePrint();
+//   document.body.appendChild(container);
+
+//   // Expose function for manual testing in console:
+//   window.bc_demo = bc;
+// })();
+window.myGenerator = function (input){
+    ret = window.bc.get_answer(input)
+    now_done = window.bc.root.children.length == 0
+    if (now_done && ret){
+        return questionStylePrint(window.bc.root) + "<br><br>זו התשובה היומית! מזל טוב!!!"
+    }
+    if (now_done && !ret){
+        return questionStylePrint(window.bc.root) + "<br><br>זו עדיין התשובה היומית! עדיין מזל טוב!!!"
+    }
+    if (!now_done && !ret){
+        return questionStylePrint(window.bc.root) + "<br><br>לא נכון"
+    }
+    if (!now_done && ret){
+        return questionStylePrint(window.bc.root)
+    }
+};
+</script>
+
+
+
+<div class="html-generator" data-id="{{ include.id | default: 'gen' }}" {% if include.rtl %}dir="rtl"{% else %}dir="auto"{% endif %}>
+  <div class="gen-output" id="gen-output" aria-live="polite"></div>
+  <div class="gen-bottom">
+    <textarea class="gen-input" id="gen-input" rows=1 placeholder="{{ include.placeholder | default: 'כתוב תשובה' }}"></textarea>
+    <button class="gen-btn" id="gen-btn" type="button">{{ include.button_label | default: 'נסה!' }}</button>
+  </div>
+</div>
+
+<style>
+/* Mobile-first, theme-friendly, RTL-aware */
+:root{
+--gen-border: #d9d9d9;
+--gen-bg: #fafafa;
+--gen-input-bg: #fff;
+--gen-accent: #444;
+--gen-radius: 12px;
+--gen-text: #000;
+}
+/* @media (prefers-color-scheme: dark){
+:root{
+--gen-border:#333;
+--gen-bg:#111;
+--gen-input-bg:#1a1a1a;
+--gen-accent:#888;
+}
+} */
+
+
+.html-generator{display:flex;flex-direction:column;gap:.75rem}
+
+
+/* Output area scrolls; keep bottom bar visible on phones */
+.html-generator .gen-output{
+min-height: 40vh; /* roomy on phones */
+max-height: 60vh;
+border:1px solid var(--gen-border);
+background:var(--gen-bg);
+padding:12px;
+border-radius:var(--gen-radius);
+overflow:auto;
+-webkit-overflow-scrolling: touch;
+font-size: 300%;
+}
+.html-generator .gen-input{
+  font-size: 300%;
+  line-height: 1.4; /* Keeps the text readable */
+  padding: 1.5rem 2rem; /* Increase padding to match the larger text */
+  min-height: 120px; 
+}
+
+
+/* Sticky bottom input on mobile; respects safe-area insets */
+.html-generator .gen-bottom{
+position: sticky; bottom: 0; /* pins to bottom of scroll container */
+display:flex; flex-direction:column; gap:.5rem;
+background: color-mix(in srgb, var(--gen-bg) 92%, transparent);
+padding: .5rem; padding-bottom: calc(.5rem + env(safe-area-inset-bottom));
+border: 1px solid var(--gen-border);
+border-radius: var(--gen-radius);
+backdrop-filter: saturate(120%) blur(4px);
+}
+
+.bc-leaf { color: rgb(0, 0, 88); font-weight: 600; }
+/* Optional: monospaced block to visualize the final printed string */
+.bc-print { white-space: pre-wrap; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+</style>
+
+<!-- 
+<script>
+  // REQUIRED: plug YOUR code here. It must accept a string and return either:
+  // 1) a DOM Node, or 2) an HTML string.
+  // Example placeholder implementation:
+  window.myGenerator = function (input) {
+    // Return a Node example
+    const box = document.createElement('div');
+    box.className = 'gen-card';
+    box.innerHTML = `<strong>Generated:</strong> ${input.replace(/</g,'&lt;').replace(/>/g,'&gt;')}`;
+    return box;
+  };
+</script> -->
+
+
+<script>
+(function(){
+  const output = document.getElementById("gen-output");
+  const textarea = document.getElementById("gen-input");
+  const btn = document.getElementById("gen-btn");
+
+  function toNode(result){
+    if(result instanceof Node) return result;
+    const wrapper = document.createElement('div');
+    wrapper.innerHTML = String(result || '');
+    // If multiple top-level nodes, keep them together
+    const frag = document.createDocumentFragment();
+    Array.from(wrapper.childNodes).forEach(n=>frag.appendChild(n));
+    return frag;
+  }
+
+
+  const node = toNode(questionStylePrint(window.bc.root));
+  output.innerHTML = ""
+  output.appendChild(node);
+  
+  function run(){
+    const val = textarea.value.trim();
+    if(!val) return;
+    // try{
+      if(typeof window.myGenerator !== 'function'){
+        console.warn('myGenerator(input) is not defined. Using a basic fallback.');
+        window.myGenerator = function(s){
+          const p = document.createElement('p');
+          p.textContent = s; return p;
+        };
+      }
+      const res = window.myGenerator(val);
+      const node = toNode(res);
+      // Insert at the TOP (newest first)
+      output.innerHTML = ""
+      output.appendChild(node);
+      
+      textarea.value = '';
+      textarea.focus();
+    // } catch(err){
+    //   const errBox = document.createElement('pre');
+    //   errBox.className = 'gen-card';
+    //   errBox.textContent = 'Error: ' + err.message;
+    //   output.insertBefore(errBox, output.firstChild);
+    // }
+  }
+
+  btn.addEventListener('click', run);
+  textarea.addEventListener('keydown', (e)=>{
+    // Enter to submit, Shift+Enter for newline
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      run();
+    }
+  });
+})();
+</script>
+
+
