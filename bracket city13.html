@@ -157,10 +157,29 @@ class BracketCity {
 
 /* ---------- Example usage ---------- */
 (function demo() {
-  const bc = new BracketCity("בדיקה");
+  const bc = new BracketCity("ראשוני");
 
   const rules = [
-    "בדיקה = בדיקה"
+    "ראשוני = אין שור למציאתו? (6 אותיות)",
+    "תו = דו",
+    "דו = כפול",
+    "כפול = *",
+    "ל = לימוד נהיגה ",
+    "אין = ___ ___ ___ מסיבה",
+    "סיבה = ___ למסיבה",
+    "שור = מזלך פחות ארבע",
+    "ארבע, 4 = גופים אפלטוניים שאינם דואליים לעצמם",
+    "פחות, מינוס = -",
+    "דואליים = Lp ל- Lq.",
+    "גופי = כלב מדבר ומטופש",
+    "אפלטונ, אפלטון = על שמו קרויה אהבה לא מינית",
+    "מציא, המציא = לחם מן הארץ – ו",
+    "עצמ, עצם, עצמות = כאלו מרכיבים שלד",
+    "שלד = אוסף הסימפלקסים מממד עד n",
+    "מיני, מיני מאוס = עכברה מדברת",
+    "ה לא, הלא, = __ ידעת שהיא בוכה יומם וליל (זו עדה)",
+    "מממ, מם, ממם, ממ = ה___, נאמר למשוך זמן כשחושבים",
+    "עדה, עדות = אשכנזית, מזרחית, אתיופית",
   ];
 
   bc.addLines(rules);
@@ -262,8 +281,8 @@ function showImage() {
   container.innerHTML = ''; // clear any previous image
 
   const img = document.createElement('img');
-  img.src = '/flower.jpg'; // change this to your image path
-  img.alt = 'אני כל כך אוהב';
+  img.src = '/primeconnections.jpg'; // change this to your image path
+  img.alt = 'אני כל כך אוהב אותך';
   container.appendChild(img);
 }
 window.myGenerator = function (input){
