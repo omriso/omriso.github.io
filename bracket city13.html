@@ -263,16 +263,15 @@ function showImage() {
 
   const img = document.createElement('img');
   img.src = 'flower.jpg'; // change this to your image path
-  img.alt = 'A beautiful flower';
-
+  img.alt = 'אני כל כך אוהב';
   container.appendChild(img);
 }
 window.myGenerator = function (input){
     ret = window.bc.get_answer(input)
     now_done = window.bc.root.children.length == 0
     if (now_done && ret){
+        showImage()
         return questionStylePrint(window.bc.root) + "<br><br>זו התשובה היומית! מזל טוב!!!"
-
     }
     if (now_done && !ret){
         return questionStylePrint(window.bc.root) + "<br><br>זו עדיין התשובה היומית! עדיין מזל טוב!!!"
