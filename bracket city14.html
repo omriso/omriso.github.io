@@ -133,7 +133,7 @@ class BracketCity {
             // Remove this node from parent's children
             parent.children = parent.children.filter(c => c !== node);
             const div = document.createElement("div");
-            div.innerHTML = `${node.answers[0]} = ${node.string}`;
+            div.innerHTML = (`${node.answers[0]} = ${node.string}`).replace("לללל", "");
             div.style.padding = "5px";
             div.style.marginBottom = "5px";
             div.style.background = "#e6f7ff";
