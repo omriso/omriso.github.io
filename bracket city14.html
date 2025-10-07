@@ -133,7 +133,7 @@ class BracketCity {
             // Remove this node from parent's children
             parent.children = parent.children.filter(c => c !== node);
             const div = document.createElement("div");
-            div.innerHTML = (`${node.answers[0]} = ${node.string}`).replace("​", "");
+            div.innerHTML = (`${node.answers[0]} = ${node.string}`).replace("לללל", "");
             div.style.padding = "5px";
             div.style.marginBottom = "5px";
             div.style.background = "#e6f7ff";
@@ -204,7 +204,7 @@ function replaceFirst(haystack, needle, replacement) {
  */
 function questionStylePrint(node) {
   // Base string (escape for safety; we’ll insert bracketed HTML later)
-  let rendered = escapeHTML(node.string.replace("​", ""));
+  let rendered = escapeHTML(node.string.replace("לללל", ""));
 
   // Leaf: color it blue and done
   if (!node.children || node.children.length === 0) {
