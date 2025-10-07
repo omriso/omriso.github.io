@@ -1,4 +1,4 @@
----
+co---
 layout: page
 permalink: /bracket-city-14/
 title: "עיר מכפלות פנימיות 14"
@@ -133,7 +133,7 @@ class BracketCity {
             // Remove this node from parent's children
             parent.children = parent.children.filter(c => c !== node);
             const div = document.createElement("div");
-            div.innerHTML = (`${node.answers[0]} = ${node.string}`).replace("לללל", "");
+            div.innerHTML = `${node.answers[0]} = ${node.string}`;
             div.style.padding = "5px";
             div.style.marginBottom = "5px";
             div.style.background = "#e6f7ff";
@@ -160,22 +160,22 @@ class BracketCity {
   const bc = new BracketCity("מקדים");
 
   const rules = [
-    "מקדים = ממזרח לפני הזמן (5 אותיות)", 
-    "מ = תחום (אות אחת)", 
-    "זמן, הזמן = מרפא את הכל, ייתן את התשובות", 
-    "מזרח = לא תפתח משם הרעה, לא יבוא משם צפיר-עזים, והוא לא אדום", 
-    "פתח = ת'גדר, (ת'כושילללללאימא שלה)", 
-    "לללללא, לא = מילת שלילה", 
-    "כושי = איך שאמא שלי קוראת לי", 
-    "ימ, ים = הבת של שי", 
-    "תחום = קבוצה פתוחה בC", 
-    "חום = סימן למחלה, אהבה, וצבע", 
-    "C, c = לעוגיות (זה מספיק טוב בשבילי, אות אחת)", 
-    "עוגיות = מבקשים את הסכמתך אליהן ממש הרבה", 
-    'ממש, ממ"ש, ממשית, ממ"שית = מסלול שבו בוכות', 
-    "אדום = מה משותף לעצור, לדם ולקומוניסטים?", 
-    "עז = מהחלב שלה עושים גבינות ללא לקטוז, בזכר זה X", 
-    "צפיר = X", 
+    "מקדים = ממזרח לפני הזמן (5 אותיות)",
+    "מ = תחום (אות אחת)",
+    "זמן, הזמן = מרפא את הכל, ייתן את התשובות",
+    "מזרח = לא תפתח משם הרעה, לא יבוא משם צפיר-עזים, והוא לא אדום",
+    "פתח = ת'גדר, (ת'כושילללללאימא שלה)",
+    "לללללא = מילת שלילה",
+    "כושי = איך שאמא שלי קוראת לי",
+    "ימ, ים = הבת של שי",
+    "תחום = קבוצה פתוחה בC",
+    "חום = סימן למחלה, אהבה, וצבע",
+    "C, c = לעוגיות (זה מספיק טוב בשבילי, אות אחת)",
+    "עוגיות = מבקשים את הסכמתך אליהן ממש הרבה",
+    'ממש, ממ"ש, ממשית, ממ"שית = מסלול שבו בוכות',
+    "אדום = מה משותף לעצור, לדם ולקומוניסטים?",
+    "עז = מהחלב שלה עושים גבינות ללא לקטוז, בזכר זה X",
+    "צפיר = X",
   ];
 
   bc.addLines(rules);
@@ -204,7 +204,7 @@ function replaceFirst(haystack, needle, replacement) {
  */
 function questionStylePrint(node) {
   // Base string (escape for safety; we’ll insert bracketed HTML later)
-  let rendered = escapeHTML(node.string.replace("לללל", ""));
+  let rendered = escapeHTML(node.string);
 
   // Leaf: color it blue and done
   if (!node.children || node.children.length === 0) {
