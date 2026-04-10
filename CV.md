@@ -2,11 +2,11 @@
 layout: default
 ---
 
-[Home](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
+<!-- [Home](./index.html) | [CV](./CV.html) | [Publication list](./publications.html) -->
 
 # **Omri Nisan Solan \- CV**
 
-Starting at Fall 2025, I will be an associate research scholar at Princeton University and a Bourgain Fellow at the Institute of Advanced Study.
+I am a Bourgain Fellow and an associate research scholar at Princeton University and at the Institute of Advanced Study.
 
 <!-- PDF version: [CV](./CV.pdf) -->
 
@@ -15,6 +15,7 @@ Starting at Fall 2025, I will be an associate research scholar at Princeton Univ
 * 2010 \- 2015: Bachelor of Science, Mathematics, Tel Aviv University (Summa cum laude).  
 * 2015 \- 2021: Master student at Tel Aviv university, under the supervision of Prof. Barak Weiss (Summa cum laude).  
 * 2022 \- 2025: Ph.D. student at the Hebrew University of Jerusalem, under the supervision of Prof. Elon Lindenstrauss.
+* 2025 \- 2029: Bourgain Fellow and an associate research scholar at Princeton University and at the Institute of Advanced Study.
  
 
 ## **Research Interest:**
@@ -54,6 +55,11 @@ workshop \- Maryland.
 * 2025 \- “Returns in flat surface dynamics”, Tzafriri Talk \- Hebrew University of Jerusalem, Israel.
 * 2025 \- “Critical exponent gap in hyperbolic geometry”, UC San Diego Group Actions Seminar.
 * 2025 \- “Gap in critical exponents”, ‘The Ergodic Method in Group Theory’ conference \- Northwestern University.
+* 2025 \- “Random walk on homogeneous spaces”, Midrasha on Groups \- Weizmann Institute of Science, Israel.  
+* 2025\- “Random walks on the space of lattices”, Mathematics Colloquium \- Tel-Aviv University, Israel.  
+* 2025 \- “Random walk on homogeneous spaces”, Groups & Dynamics \- Hebrew University of Jerusalem, Israel.  
+* 2026 \- “Equidistribution of expanding horospheres in the space of translation surfaces” \- Joint IAS/PU Groups and Dynamics Seminar.
+
 
 
 ## **Service to the Community:**

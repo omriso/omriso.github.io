@@ -19,11 +19,11 @@ layout: default
 * E. Solan and O. N. Solan. Browder’s theorem through Brouwer’s fixed point theorem. **The American Mathematical Monthly** (2023), 1-5.
 * O. N. Solan, and N.Tamam. On topologically big divergent trajectories. **Duke Mathematical Journal** (2023), 3429-3474.
 * O. N. Solan and Y. Yifrach.  Tori Approximation of Families of Diagonally Invariant Measures. **Geometric and Functional Analysis** (2023), 1354-1378.
-* T. Meyerovich and O. N. Solan. Automatic continuity of Polynomial maps and cocycles. **Proceedings of the American Mathematical Society**.
+* T. Meyerovich and O. N. Solan. Automatic continuity of Polynomial maps and cocycles. **Proceedings of the American Mathematical Society** (2025), 153.10, 4275-4281.
 * O. N. Solan and N. Tamam. Quantitative instability of algebraic representations.  **Geometriae Dedicata 219** (2025), 78.
+* O. N. Solan and A. Wieser. Birkhoff generic points on curves in horospheres. **Selecta Mathematica** (2025), 31.5.
 
-# Accepted for Publication:
-* O. N. Solan and A. Wieser. Birkhoff generic points on curves in horospheres. [arXiv:2301.10671](https://arxiv.org/abs/2301.10671).  Accepted to **Selecta Mathematica**.
+<!-- # Accepted for Publication: -->
 
 # Submitted for Publication:
 
