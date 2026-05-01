@@ -1,10 +1,8 @@
 ---
 layout: default
 ---
-
-[Home](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
-<!-- # Omri Solan publications: -->
-# Published:
+# Omri Solan Publication List
+<!-- ## Publications: -->
 
 * O. N. Solan and A. Wieser. Birkhoff generic points on curves in horospheres. **Selecta Mathematica** (2025), 31.5.
 * O. N. Solan and N. Tamam. Quantitative instability of algebraic representations.  **Geometriae Dedicata 219** (2025), 78.
@@ -23,13 +21,13 @@ layout: default
 * O. N. Solan, Y. Solomon and B. Weiss. On problems of Danzer and Gowers and dynamics on the space of closed subsets of R<sup>n</sup>, **International Mathematics Research Notices** 21 (2017), 6584–6598.
 * E. Lehrer, E. Solan, and O. N. Solan. The Value Functions of Markov Decision Processes. **Operations Research Letters** 44 (2016), 587–591.
 
-<!-- # Accepted for Publication: -->
+<!-- ## Accepted for Publication: -->
 
-# Submitted for Publication:
+## Submitted for Publication:
 
-* O. N. Solan, Orbits in Teichmüller dynamics admits a critical exponent gap. [arXiv:2411.09144](https://arxiv.org/abs/2411.09144).
 * O. N. Solan, Critical exponent gap and leafwise dimension. [arXiv:2404.00700](https://arxiv.org/abs/2404.00700).
+* O. N. Solan, Orbits in Teichmüller dynamics admits a critical exponent gap. [arXiv:2411.09144](https://arxiv.org/abs/2411.09144).
 
-# Preprints:
+## Preprints:
 
 * O. N. Solan. Parametric Geometry of numbers for a general flow, [arXiv:2106.01707](https://arxiv.org/abs/2106.01707).
