@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 title: Letter Game
 permalink: /letter-game/
 ---
@@ -133,6 +133,47 @@ permalink: /letter-game/
     font-size: 0.95rem;
   }
 
+  .pg-heart-stage {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .pg-heart {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    color: var(--color);
+    font-size: var(--size);
+    line-height: 1;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+    animation: pg-heart-burst 1200ms ease-out forwards;
+    animation-delay: var(--delay);
+    text-shadow: 0 2px 8px rgba(199, 62, 90, 0.2);
+  }
+
+  @keyframes pg-heart-burst {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+    }
+
+    12% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+      transform: translate(
+        calc(-50% + var(--dx)),
+        calc(-50% + var(--dy))
+      ) scale(1) rotate(var(--rot));
+    }
+  }
+
   @media (max-width: 520px) {
     .pg-shell {
       margin: -12px -8px 0;
@@ -214,6 +255,51 @@ permalink: /letter-game/
     const solvedCount = PUZZLES.filter(function(_, index) { return state[index] === true; }).length;
     countEl.textContent = solvedCount + " / " + PUZZLES.length;
     completeEl.hidden = solvedCount !== PUZZLES.length;
+
+    if (solvedCount === PUZZLES.length && !state.__heartsShown) {
+      state.__heartsShown = true;
+      writeCookie(cookieName(), JSON.stringify(state), 365);
+      launchHeartFireworks();
+    }
+  }
+
+  function launchHeartFireworks() {
+    const stage = document.createElement("div");
+    stage.className = "pg-heart-stage";
+    stage.setAttribute("aria-hidden", "true");
+    document.body.appendChild(stage);
+
+    const colors = ["#c73e5a", "#e85d75", "#f08a9b", "#efb84a", "#2f7d73"];
+    const bursts = [
+      { x: 24, y: 34 },
+      { x: 50, y: 24 },
+      { x: 76, y: 36 },
+      { x: 36, y: 58 },
+      { x: 64, y: 60 }
+    ];
+
+    bursts.forEach(function(burst, burstIndex) {
+      for (let i = 0; i < 18; i += 1) {
+        const angle = (Math.PI * 2 * i) / 18;
+        const distance = 58 + Math.random() * 92;
+        const heart = document.createElement("span");
+        heart.className = "pg-heart";
+        heart.textContent = "♥";
+        heart.style.setProperty("--x", burst.x + "vw");
+        heart.style.setProperty("--y", burst.y + "vh");
+        heart.style.setProperty("--dx", Math.cos(angle) * distance + "px");
+        heart.style.setProperty("--dy", Math.sin(angle) * distance + "px");
+        heart.style.setProperty("--rot", (Math.random() * 240 - 120) + "deg");
+        heart.style.setProperty("--size", (18 + Math.random() * 18) + "px");
+        heart.style.setProperty("--delay", (burstIndex * 130 + Math.random() * 90) + "ms");
+        heart.style.setProperty("--color", colors[Math.floor(Math.random() * colors.length)]);
+        stage.appendChild(heart);
+      }
+    });
+
+    setTimeout(function() {
+      stage.remove();
+    }, 2400);
   }
 
   function cookieName() {
