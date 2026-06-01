@@ -19,6 +19,7 @@ permalink: /letter-puzzle/
     margin: -8px -4px 0;
     padding: 20px 0 34px;
     color: var(--pp-ink);
+    direction: rtl;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
@@ -58,6 +59,10 @@ permalink: /letter-puzzle/
     padding: 12px;
   }
 
+  .pp-card.is-wide {
+    grid-column: 1 / -1;
+  }
+
   .pp-image {
     display: grid;
     place-items: center;
@@ -74,7 +79,8 @@ permalink: /letter-puzzle/
   .pp-image img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #fff;
   }
 
   .pp-card input {
@@ -89,6 +95,7 @@ permalink: /letter-puzzle/
     background: #fff;
     font: inherit;
     font-size: 1rem;
+    direction: rtl;
   }
 
   .pp-card input:focus {
@@ -151,16 +158,16 @@ permalink: /letter-puzzle/
 </style>
 
 <main class="pp-shell">
-  <a class="pp-back" href="{{ '/letter-game/' | relative_url }}">Back to the squares</a>
-  <h1 class="pp-title">Puzzle <span id="pp-number"></span></h1>
-  <p class="pp-note">Guess both words. They are the same except for one letter.</p>
+  <a class="pp-back" href="{{ '/letter-game/' | relative_url }}">חזרה לריבועים</a>
+  <h1 class="pp-title">חידה <span id="pp-number"></span></h1>
+  <p class="pp-note" id="pp-note">נחשו את שתי המילים. הן זהות חוץ מאות אחת.</p>
 
   <form id="pp-form" autocomplete="off">
     <div class="pp-pictures" id="pp-pictures"></div>
     <div class="pp-actions">
-      <button class="pp-submit" type="submit">Check</button>
+      <button class="pp-submit" type="submit">בדיקה</button>
       <div class="pp-status" id="pp-status" aria-live="polite"></div>
-      <a class="pp-next" id="pp-next" href="{{ '/letter-game/' | relative_url }}" hidden>Return to the sentence</a>
+      <a class="pp-next" id="pp-next" href="{{ '/letter-game/' | relative_url }}" hidden>חזרה למשפט</a>
     </div>
   </form>
 </main>
@@ -178,25 +185,30 @@ permalink: /letter-puzzle/
   const picturesEl = document.getElementById("pp-pictures");
   const statusEl = document.getElementById("pp-status");
   const nextEl = document.getElementById("pp-next");
+  const noteEl = document.getElementById("pp-note");
 
   if (!puzzle) {
-    document.querySelector(".pp-title").textContent = "Puzzle not found";
-    document.querySelector(".pp-note").textContent = "This square does not have a puzzle yet.";
+    document.querySelector(".pp-title").textContent = "החידה לא נמצאה";
+    noteEl.textContent = "לריבוע הזה אין עדיין חידה.";
     form.hidden = true;
     return;
   }
 
   document.getElementById("pp-number").textContent = index + 1;
+  if (puzzle.orderMatters === false) {
+    noteEl.textContent = "נחשו את שתי המילים. בחידה הזו הסדר לא משנה.";
+  }
   renderPictures();
 
   form.addEventListener("submit", function(event) {
     event.preventDefault();
     const answers = Array.from(form.querySelectorAll("input")).map(input => normalize(input.value));
-    const expected = puzzle.words.map(normalize);
-    const solved = answers[0] === expected[0] && answers[1] === expected[1];
+    const solved = acceptedAnswers().some(function(expected) {
+      return puzzle.orderMatters === false ? sameWordsAnyOrder(answers, expected) : sameWordsInOrder(answers, expected);
+    });
 
     if (!solved) {
-      statusEl.textContent = "Not yet. Try again.";
+      statusEl.textContent = "עדיין לא. אפשר לנסות שוב.";
       statusEl.className = "pp-status is-bad";
       return;
     }
@@ -204,16 +216,17 @@ permalink: /letter-puzzle/
     const progress = readProgress();
     progress[index] = true;
     writeCookie(cookieName(), JSON.stringify(progress), 365);
-    statusEl.textContent = "Correct. The letter is " + puzzle.letter + ".";
+    statusEl.textContent = "נכון. האות היא " + puzzle.letter + ".";
     statusEl.className = "pp-status is-good";
     nextEl.hidden = false;
   });
 
   function renderPictures() {
     picturesEl.innerHTML = "";
+    const answerCount = (puzzle.words || []).length;
     puzzle.pictures.forEach(function(picture, pictureIndex) {
-      const card = document.createElement("label");
-      card.className = "pp-card";
+      const card = document.createElement("div");
+      card.className = "pp-card" + (puzzle.pictures.length === 1 ? " is-wide" : "");
 
       const image = document.createElement("div");
       image.className = "pp-image";
@@ -228,18 +241,41 @@ permalink: /letter-puzzle/
         image.setAttribute("aria-label", picture.alt || "word picture");
       }
 
-      const input = document.createElement("input");
-      input.type = "text";
-      input.inputMode = "text";
-      input.autocapitalize = "none";
-      input.spellcheck = false;
-      input.placeholder = "Word " + (pictureIndex + 1);
-      input.setAttribute("aria-label", "Guess word " + (pictureIndex + 1));
-
       card.appendChild(image);
-      card.appendChild(input);
+      const inputsForCard = puzzle.pictures.length === 1 ? answerCount : 1;
+      for (let i = 0; i < inputsForCard; i += 1) {
+        const inputNumber = puzzle.pictures.length === 1 ? i + 1 : pictureIndex + 1;
+        card.appendChild(makeInput(inputNumber));
+      }
       picturesEl.appendChild(card);
     });
+  }
+
+  function makeInput(inputNumber) {
+    const input = document.createElement("input");
+    input.type = "text";
+    input.inputMode = "text";
+    input.autocapitalize = "none";
+    input.spellcheck = false;
+    input.placeholder = "מילה " + inputNumber;
+    input.setAttribute("aria-label", "ניחוש מילה " + inputNumber);
+    return input;
+  }
+
+  function acceptedAnswers() {
+    return (puzzle.answers || [puzzle.words]).map(function(answer) {
+      return answer.map(normalize);
+    });
+  }
+
+  function sameWordsInOrder(answers, expected) {
+    return answers.length === expected.length && answers.every(function(answer, answerIndex) {
+      return answer === expected[answerIndex];
+    });
+  }
+
+  function sameWordsAnyOrder(answers, expected) {
+    return answers.length === expected.length && answers.slice().sort().join("\n") === expected.slice().sort().join("\n");
   }
 
   function normalize(value) {

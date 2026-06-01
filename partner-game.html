@@ -20,6 +20,7 @@ permalink: /letter-game/
     margin: -8px -4px 0;
     padding: 22px 0 34px;
     color: var(--pg-ink);
+    direction: rtl;
     font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
 
@@ -86,6 +87,7 @@ permalink: /letter-game/
     flex-wrap: wrap;
     gap: 9px;
     align-items: center;
+    direction: rtl;
     padding: 18px 0 8px;
   }
 
@@ -150,18 +152,18 @@ permalink: /letter-game/
 
 <main class="pg-shell">
   <div class="pg-top">
-    <div class="pg-kicker">A small puzzle</div>
-    <h1 class="pg-title">Find the sentence</h1>
-    <p class="pg-note">Tap a square, solve the two-picture word puzzle, and the square will turn into its letter.</p>
+    <div class="pg-kicker">חידה קטנה</div>
+    <h1 class="pg-title">מצאו את המשפט</h1>
+    <p class="pg-note">לוחצים על ריבוע, פותרים את חידת התמונות, והריבוע הופך לאות.</p>
   </div>
 
   <div class="pg-progress" aria-live="polite">
-    <span><strong id="pg-count">0</strong> letters found</span>
-    <button class="pg-reset" id="pg-reset" type="button">Reset</button>
+    <span><strong id="pg-count">0</strong> אותיות נמצאו</span>
+    <button class="pg-reset" id="pg-reset" type="button">איפוס</button>
   </div>
 
   <div class="pg-sentence" id="pg-sentence" aria-label="secret sentence"></div>
-  <p class="pg-footer" id="pg-complete" hidden>You solved it.</p>
+  <p class="pg-footer" id="pg-complete" hidden>פתרת הכל.</p>
 </main>
 
 <script src="{{ '/assets/js/partner-letter-game-data.js' | relative_url }}"></script>
@@ -180,7 +182,7 @@ permalink: /letter-game/
   render();
 
   resetEl.addEventListener("click", function() {
-    if (!confirm("Reset this puzzle?")) return;
+    if (!confirm("לאפס את ההתקדמות?")) return;
     writeCookie(cookieName(), "", -1);
     location.reload();
   });
