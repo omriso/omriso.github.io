@@ -1,0 +1,268 @@
+---
+layout: default
+title: Letter Puzzle
+permalink: /letter-puzzle/
+---
+
+<style>
+  :root {
+    --pp-ink: #25302b;
+    --pp-muted: #70776f;
+    --pp-paper: #fffaf1;
+    --pp-line: #ded4c1;
+    --pp-accent: #c73e5a;
+    --pp-good: #2f7d73;
+  }
+
+  .pp-shell {
+    min-height: 72vh;
+    margin: -8px -4px 0;
+    padding: 20px 0 34px;
+    color: var(--pp-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .pp-back {
+    display: inline-flex;
+    align-items: center;
+    min-height: 38px;
+    margin-bottom: 14px;
+    color: var(--pp-accent);
+    font-weight: 800;
+    text-decoration: none;
+  }
+
+  .pp-title {
+    margin: 0 0 6px;
+    font-size: clamp(1.55rem, 9vw, 2.55rem);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .pp-note {
+    margin: 0 0 18px;
+    color: var(--pp-muted);
+    line-height: 1.55;
+  }
+
+  .pp-pictures {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .pp-card {
+    border: 1px solid var(--pp-line);
+    border-radius: 8px;
+    background: var(--pp-paper);
+    padding: 12px;
+  }
+
+  .pp-image {
+    display: grid;
+    place-items: center;
+    width: 100%;
+    aspect-ratio: 1;
+    border: 1px solid #eadfca;
+    border-radius: 8px;
+    background: #fff;
+    overflow: hidden;
+    color: var(--pp-ink);
+    font-size: clamp(3.5rem, 22vw, 7rem);
+  }
+
+  .pp-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .pp-card input {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 48px;
+    margin-top: 12px;
+    border: 1px solid #cdbfaa;
+    border-radius: 8px;
+    padding: 0 12px;
+    color: var(--pp-ink);
+    background: #fff;
+    font: inherit;
+    font-size: 1rem;
+  }
+
+  .pp-card input:focus {
+    border-color: var(--pp-good);
+    box-shadow: 0 0 0 3px rgba(47, 125, 115, 0.18);
+    outline: none;
+  }
+
+  .pp-actions {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .pp-submit,
+  .pp-next {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    border: 1px solid #a5344b;
+    border-radius: 8px;
+    background: var(--pp-accent);
+    color: #fff;
+    font-weight: 900;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .pp-next {
+    border-color: #256b62;
+    background: var(--pp-good);
+  }
+
+  .pp-status {
+    min-height: 24px;
+    color: var(--pp-muted);
+    font-weight: 700;
+  }
+
+  .pp-status.is-good {
+    color: var(--pp-good);
+  }
+
+  .pp-status.is-bad {
+    color: var(--pp-accent);
+  }
+
+  @media (max-width: 560px) {
+    .pp-shell {
+      margin: -12px -8px 0;
+      padding: 16px 0 28px;
+    }
+
+    .pp-pictures {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<main class="pp-shell">
+  <a class="pp-back" href="{{ '/letter-game/' | relative_url }}">Back to the squares</a>
+  <h1 class="pp-title">Puzzle <span id="pp-number"></span></h1>
+  <p class="pp-note">Guess both words. They are the same except for one letter.</p>
+
+  <form id="pp-form" autocomplete="off">
+    <div class="pp-pictures" id="pp-pictures"></div>
+    <div class="pp-actions">
+      <button class="pp-submit" type="submit">Check</button>
+      <div class="pp-status" id="pp-status" aria-live="polite"></div>
+      <a class="pp-next" id="pp-next" href="{{ '/letter-game/' | relative_url }}" hidden>Return to the sentence</a>
+    </div>
+  </form>
+</main>
+
+<script src="{{ '/assets/js/partner-letter-game-data.js' | relative_url }}"></script>
+<script>
+(function() {
+  const GAME = window.PARTNER_LETTER_GAME;
+  const PUZZLES = GAME.puzzles;
+
+  const params = new URLSearchParams(location.search);
+  const index = Number(params.get("p") || 0);
+  const puzzle = PUZZLES[index];
+  const form = document.getElementById("pp-form");
+  const picturesEl = document.getElementById("pp-pictures");
+  const statusEl = document.getElementById("pp-status");
+  const nextEl = document.getElementById("pp-next");
+
+  if (!puzzle) {
+    document.querySelector(".pp-title").textContent = "Puzzle not found";
+    document.querySelector(".pp-note").textContent = "This square does not have a puzzle yet.";
+    form.hidden = true;
+    return;
+  }
+
+  document.getElementById("pp-number").textContent = index + 1;
+  renderPictures();
+
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    const answers = Array.from(form.querySelectorAll("input")).map(input => normalize(input.value));
+    const expected = puzzle.words.map(normalize);
+    const solved = answers[0] === expected[0] && answers[1] === expected[1];
+
+    if (!solved) {
+      statusEl.textContent = "Not yet. Try again.";
+      statusEl.className = "pp-status is-bad";
+      return;
+    }
+
+    const progress = readProgress();
+    progress[index] = true;
+    writeCookie(cookieName(), JSON.stringify(progress), 365);
+    statusEl.textContent = "Correct. The letter is " + puzzle.letter + ".";
+    statusEl.className = "pp-status is-good";
+    nextEl.hidden = false;
+  });
+
+  function renderPictures() {
+    picturesEl.innerHTML = "";
+    puzzle.pictures.forEach(function(picture, pictureIndex) {
+      const card = document.createElement("label");
+      card.className = "pp-card";
+
+      const image = document.createElement("div");
+      image.className = "pp-image";
+
+      if (picture.src) {
+        const img = document.createElement("img");
+        img.src = picture.src;
+        img.alt = picture.alt || "word picture";
+        image.appendChild(img);
+      } else {
+        image.textContent = picture.emoji || "?";
+        image.setAttribute("aria-label", picture.alt || "word picture");
+      }
+
+      const input = document.createElement("input");
+      input.type = "text";
+      input.inputMode = "text";
+      input.autocapitalize = "none";
+      input.spellcheck = false;
+      input.placeholder = "Word " + (pictureIndex + 1);
+      input.setAttribute("aria-label", "Guess word " + (pictureIndex + 1));
+
+      card.appendChild(image);
+      card.appendChild(input);
+      picturesEl.appendChild(card);
+    });
+  }
+
+  function normalize(value) {
+    return String(value).trim().toLowerCase().replace(/\s+/g, " ");
+  }
+
+  function cookieName() {
+    return "pg_" + GAME.gameId;
+  }
+
+  function readProgress() {
+    const raw = document.cookie.split("; ").find(row => row.startsWith(cookieName() + "="));
+    if (!raw) return {};
+    try {
+      return JSON.parse(decodeURIComponent(raw.split("=").slice(1).join("="))) || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + expires + "; path=/; SameSite=Lax";
+  }
+})();
+</script>

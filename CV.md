@@ -33,7 +33,7 @@ My primary research focus is on homogeneous dynamics. I leverage tools from numb
 * International Mathematics Competition for University Students, 2014, First Prize, 2015 Grand First Prize & Prize for special solution, 2017 First Prize.
 * Dean's award for distinguished students \- Tel Aviv University (2015).
 * Award of excellence for Master's Studies Tel Aviv University (2021).
-* ‘Lior Tzafriri’ Award for excellence in Ph.D. studies.
+* ‘Lior Tzafriri’ Award for excellence in Ph.D. studies (2025).
 
 ## **Active Participation in Scientific Meetings:**
 
@@ -61,9 +61,7 @@ workshop \- Maryland.
 * 2026 \- “Equidistribution of expanding horospheres in the space of translation surfaces” \- Joint IAS/PU Groups and Dynamics Seminar.
 * 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- University of Chicago Dynamics Seminar.
 * 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- University of Huston Dynamical Systems Seminar.
-* 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- Homogeneous Dynamics and Anosov Representations workshop, SLMath, Berkeley.
-
-
+* 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- ‘Homogeneous Dynamics and Anosov Representations’ workshop, SLMath, Berkeley.
 
 ## **Service to the Community:**
 

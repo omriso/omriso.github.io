@@ -1,0 +1,236 @@
+---
+layout: default
+title: Letter Game
+permalink: /letter-game/
+---
+
+<style>
+  :root {
+    --pg-ink: #25302b;
+    --pg-muted: #6d756f;
+    --pg-paper: #fffaf1;
+    --pg-line: #ded4c1;
+    --pg-accent: #c73e5a;
+    --pg-accent-2: #2f7d73;
+    --pg-gold: #efb84a;
+  }
+
+  .pg-shell {
+    min-height: 72vh;
+    margin: -8px -4px 0;
+    padding: 22px 0 34px;
+    color: var(--pg-ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+
+  .pg-top {
+    display: grid;
+    gap: 8px;
+    margin-bottom: 22px;
+  }
+
+  .pg-kicker {
+    color: var(--pg-accent);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .pg-title {
+    margin: 0;
+    color: var(--pg-ink);
+    font-size: clamp(1.7rem, 10vw, 3rem);
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .pg-note {
+    max-width: 34rem;
+    margin: 0;
+    color: var(--pg-muted);
+    font-size: 1rem;
+    line-height: 1.55;
+  }
+
+  .pg-progress {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 18px 0 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--pg-line);
+    border-radius: 8px;
+    background: var(--pg-paper);
+  }
+
+  .pg-progress strong {
+    color: var(--pg-accent-2);
+  }
+
+  .pg-reset {
+    appearance: none;
+    border: 1px solid #d8c8ad;
+    border-radius: 999px;
+    background: #fff;
+    color: var(--pg-ink);
+    min-height: 40px;
+    padding: 0 14px;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .pg-sentence {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    align-items: center;
+    padding: 18px 0 8px;
+  }
+
+  .pg-letter {
+    appearance: none;
+    width: clamp(42px, 13.5vw, 62px);
+    aspect-ratio: 1;
+    border: 1px solid #cfc2aa;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #fff 0%, #fff6e4 100%);
+    box-shadow: 0 5px 0 #d9caaf;
+    color: transparent;
+    display: grid;
+    place-items: center;
+    font-size: clamp(1.25rem, 7vw, 2rem);
+    font-weight: 900;
+    line-height: 1;
+    text-decoration: none;
+    transform: translateY(0);
+    transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease, background 120ms ease;
+  }
+
+  .pg-letter:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 #d9caaf;
+  }
+
+  .pg-letter.is-solved {
+    border-color: #d7a93f;
+    background: #fff2c3;
+    box-shadow: 0 5px 0 #ddb452;
+    color: var(--pg-ink);
+  }
+
+  .pg-space {
+    width: clamp(18px, 5vw, 28px);
+    height: 1px;
+  }
+
+  .pg-footer {
+    margin-top: 22px;
+    color: var(--pg-muted);
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 520px) {
+    .pg-shell {
+      margin: -12px -8px 0;
+      padding: 16px 0 28px;
+    }
+
+    .pg-progress {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .pg-reset {
+      width: 100%;
+    }
+  }
+</style>
+
+<main class="pg-shell">
+  <div class="pg-top">
+    <div class="pg-kicker">A small puzzle</div>
+    <h1 class="pg-title">Find the sentence</h1>
+    <p class="pg-note">Tap a square, solve the two-picture word puzzle, and the square will turn into its letter.</p>
+  </div>
+
+  <div class="pg-progress" aria-live="polite">
+    <span><strong id="pg-count">0</strong> letters found</span>
+    <button class="pg-reset" id="pg-reset" type="button">Reset</button>
+  </div>
+
+  <div class="pg-sentence" id="pg-sentence" aria-label="secret sentence"></div>
+  <p class="pg-footer" id="pg-complete" hidden>You solved it.</p>
+</main>
+
+<script src="{{ '/assets/js/partner-letter-game-data.js' | relative_url }}"></script>
+<script>
+(function() {
+  const GAME = window.PARTNER_LETTER_GAME;
+  const PUZZLES = GAME.puzzles;
+  const sentence = GAME.sentence;
+  const sentenceEl = document.getElementById("pg-sentence");
+  const countEl = document.getElementById("pg-count");
+  const resetEl = document.getElementById("pg-reset");
+  const completeEl = document.getElementById("pg-complete");
+
+  const state = readProgress();
+
+  render();
+
+  resetEl.addEventListener("click", function() {
+    if (!confirm("Reset this puzzle?")) return;
+    writeCookie(cookieName(), "", -1);
+    location.reload();
+  });
+
+  function render() {
+    sentenceEl.innerHTML = "";
+    let puzzleIndex = 0;
+
+    sentence.split("").forEach(function(char) {
+      if (char === " ") {
+        const space = document.createElement("span");
+        space.className = "pg-space";
+        sentenceEl.appendChild(space);
+        return;
+      }
+
+      const puzzle = PUZZLES[puzzleIndex];
+      if (!puzzle) return;
+      const solved = state[puzzleIndex] === true;
+      const link = document.createElement("a");
+      link.className = "pg-letter" + (solved ? " is-solved" : "");
+      link.href = "{{ '/letter-puzzle/' | relative_url }}?p=" + puzzleIndex;
+      link.textContent = solved ? puzzle.letter : "?";
+      link.setAttribute("aria-label", solved ? "Solved letter " + puzzle.letter : "Open puzzle " + (puzzleIndex + 1));
+      sentenceEl.appendChild(link);
+      puzzleIndex += 1;
+    });
+
+    const solvedCount = PUZZLES.filter(function(_, index) { return state[index] === true; }).length;
+    countEl.textContent = solvedCount + " / " + PUZZLES.length;
+    completeEl.hidden = solvedCount !== PUZZLES.length;
+  }
+
+  function cookieName() {
+    return "pg_" + GAME.gameId;
+  }
+
+  function readProgress() {
+    const raw = document.cookie.split("; ").find(row => row.startsWith(cookieName() + "="));
+    if (!raw) return {};
+    try {
+      return JSON.parse(decodeURIComponent(raw.split("=").slice(1).join("="))) || {};
+    } catch (error) {
+      return {};
+    }
+  }
+
+  function writeCookie(name, value, days) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = name + "=" + encodeURIComponent(value) + "; expires=" + expires + "; path=/; SameSite=Lax";
+  }
+})();
+</script>
