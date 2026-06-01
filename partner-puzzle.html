@@ -16,7 +16,8 @@ permalink: /letter-puzzle/
 
   .pp-shell {
     min-height: 72vh;
-    margin: -8px -4px 0;
+    width: min(100%, 920px);
+    margin: -8px auto 0;
     padding: 20px 0 34px;
     color: var(--pp-ink);
     direction: rtl;
@@ -49,7 +50,7 @@ permalink: /letter-puzzle/
   .pp-pictures {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: 16px;
   }
 
   .pp-card {
@@ -67,7 +68,7 @@ permalink: /letter-puzzle/
     display: grid;
     place-items: center;
     width: 100%;
-    aspect-ratio: 1;
+    height: clamp(260px, 42vw, 390px);
     border: 1px solid #eadfca;
     border-radius: 8px;
     background: #fff;
@@ -145,14 +146,28 @@ permalink: /letter-puzzle/
     color: var(--pp-accent);
   }
 
-  @media (max-width: 560px) {
+  @media (max-width: 760px) {
     .pp-shell {
-      margin: -12px -8px 0;
-      padding: 16px 0 28px;
+      width: calc(100vw - 24px);
+      margin: -12px calc(50% - 50vw) 0;
+      padding: 16px 12px 28px;
+      box-sizing: border-box;
     }
 
     .pp-pictures {
       grid-template-columns: 1fr;
+      gap: 18px;
+    }
+
+    .pp-image {
+      height: min(72vw, 54vh);
+      min-height: 285px;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .pp-image {
+      min-height: 250px;
     }
   }
 </style>
