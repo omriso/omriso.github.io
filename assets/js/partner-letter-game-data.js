@@ -23,7 +23,7 @@ window.PARTNER_LETTER_GAME = {
     { letter: "מ", words: ["שממה", "שמה"], pictures: [{ src: "/assets/img/Nitzan%20Art/N1.jpg", alt: "שממה" }, { src: "/assets/img/Nitzan%20Art/N2.png", alt: "שמה" }] },
     { letter: "ע", words: ["עברית", "ברית"], orderMatters: false, pictures: [{ src: "/assets/img/Nitzan%20Art/O.jpg", alt: "עברית וברית" }] },
     { letter: "ר", words: ["ארמון", "אמון"], pictures: [{ src: "/assets/img/Nitzan%20Art/P1.bmp", alt: "ארמון" }, { src: "/assets/img/Nitzan%20Art/P2.bmp", alt: "אמון" }] },
-    { letter: "י", words: ["מטה", "מיטה"], pictures: [{ src: "/assets/img/Nitzan%20Art/Q1.bmp", alt: "מטה" }, { src: "/assets/img/Nitzan%20Art/Q2.webp", alt: "מיטה" }] },
+    { letter: "י", words: ["מטה", "מיטה"], pictures: [{ src: "/assets/img/Nitzan%20Art/Q1.bmp", alt: "מטה" }, { src: "/assets/img/Nitzan%20Art/Q2.png", alt: "מיטה" }] },
     { letter: "ך", words: ["שיר", "שיכר"], pictures: [{ src: "/assets/img/Nitzan%20Art/R1.bmp", alt: "שיר" }, { src: "/assets/img/Nitzan%20Art/R2.jpg", alt: "שיכר" }] },
     { letter: "א", words: ["מאכער", "מכער"], pictures: [{ src: "/assets/img/Nitzan%20Art/S1.png", alt: "מאכער" }, { src: "/assets/img/Nitzan%20Art/S2.webp", alt: "מכער" }] },
     { letter: "ו", words: ["שורה", "שרה"], pictures: [{ src: "/assets/img/Nitzan%20Art/T1.png", alt: "שורה" }, { src: "/assets/img/Nitzan%20Art/T2.bmp", alt: "שרה" }] },
