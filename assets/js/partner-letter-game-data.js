@@ -11,7 +11,7 @@ window.PARTNER_LETTER_GAME = {
     { letter: "ד", words: ["אמה", "אדמה"], pictures: [{ src: "/assets/img/Nitzan%20Art/G1.bmp", alt: "אמה" }, { src: "/assets/img/Nitzan%20Art/G2.bmp", alt: "אדמה" }] },
     { letter: "ג", words: ["הון", "הוגן"], pictures: [{ src: "/assets/img/Nitzan%20Art/H1.webp", alt: "הון" }, { src: "/assets/img/Nitzan%20Art/H2.jpg", alt: "הוגן" }] },
     { letter: "א", words: ["מאורה", "מורה"], pictures: [{ src: "/assets/img/Nitzan%20Art/I1.jpg", alt: "מאורה" }, { src: "/assets/img/Nitzan%20Art/I2.jpg", alt: "מורה" }] },
-    { letter: "ה", words: ["מלך", "מהלך"], orderMatters: false, pictures: [{ src: "/assets/img/Nitzan%20Art/J.bmp", alt: "מלך ומהלך" }] },
+    { letter: "ה", words: ["מלך", "מהלך"], orderMatters: false, pictures: [{ src: "/assets/img/Nitzan%20Art/J.jpg", alt: "מלך ומהלך" }] },
     { letter: "ב", words: ["שיט", "שביט"], pictures: [{ src: "/assets/img/Nitzan%20Art/K1.bmp", alt: "שיט" }, { src: "/assets/img/Nitzan%20Art/K2.jpg", alt: "שביט" }] },
     {
       letter: "ך",
