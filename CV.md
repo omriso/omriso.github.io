@@ -10,15 +10,17 @@ I am a Bourgain Fellow and an associate research scholar at Princeton University
 
 <!-- PDF version: [CV](./CV.pdf) -->
 
+## **Employment:**
+
+* 2025 \- 2029: Bourgain Fellow and an associate research scholar at Princeton University and at the Institute of Advanced Study.
+
+
 ## **Education:**
 
 * 2022 \- 2025: Ph.D. student at the Hebrew University of Jerusalem, under the supervision of Prof. Elon Lindenstrauss.
 * 2015 \- 2021: Master student at Tel Aviv university, under the supervision of Prof. Barak Weiss (Summa cum laude).
 * 2010 \- 2015: Bachelor of Science, Mathematics, Tel Aviv University (Summa cum laude).
 
-## **Jobs:**
-
-* 2025 \- 2029: Bourgain Fellow and an associate research scholar at Princeton University and at the Institute of Advanced Study.
 
 ## **Research Interest:**
 
