@@ -25,9 +25,11 @@ layout: default
 
 ## Submitted for Publication:
 
-* O. N. Solan, Critical exponent gap and leafwise dimension. [arXiv:2404.00700](https://arxiv.org/abs/2404.00700).
 * O. N. Solan, Orbits in Teichmüller dynamics admits a critical exponent gap. [arXiv:2411.09144](https://arxiv.org/abs/2411.09144).
+* O. N. Solan, Critical exponent gap and leafwise dimension. [arXiv:2404.00700](https://arxiv.org/abs/2404.00700).
 
 ## Preprints:
 
+* I. Gekhtman, S. Machado, O. N. Solan, and Y. Yifrach. The Structure of Almost Stationary Measures. [arXiv:2608.01466](https://arxiv.org/abs/2608.01466).
+* I. Gekhtman, S. Machado, O. N. Solan, and Y. Yifrach. Applications of Almost Stationarity I: Quantitative Growth of Injectivity Radius and Stück-Zimmer Theorem. [arXiv:2608.01382](https://arxiv.org/abs/2608.01382).
 * O. N. Solan. Parametric Geometry of numbers for a general flow, [arXiv:2106.01707](https://arxiv.org/abs/2106.01707).
