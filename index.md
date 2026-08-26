@@ -15,9 +15,9 @@ You can interest me in questions related to dynamics with number theory, geometr
 
 ## Contact
 
-**Email:** omrinisan dot solan at mail dot huji dot ac dot il
+**Email:** os4293 at princeton...
 
-**Office:** Ross building, floor -1, room 63
+**Office:** Fine Hall, floor 6, room 609
 
 <!-- Text can be **bold**, _italic_, or ~~strikethrough~~.
 
