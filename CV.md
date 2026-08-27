@@ -42,29 +42,30 @@ My primary research focus is on homogeneous dynamics. I leverage tools from numb
 
 ## **Active Participation in Scientific Meetings:**
 
-* 2026 \- “Equidistribution of expanding horospheres in the space of translation surfaces” \- Joint IAS/PU Groups and Dynamics Seminar.
-* 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- University of Chicago Dynamics Seminar.
-* 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- University of Huston Dynamical Systems Seminar.
+
 * 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- ‘Homogeneous Dynamics and Anosov Representations’ workshop, SLMath, Berkeley.
-* 2025 \- “Returns in flat surface dynamics”, Tzafriri Talk \- Hebrew University of Jerusalem, Israel.
-* 2025 \- “Critical exponent gap in hyperbolic geometry”, UC San Diego Group Actions Seminar.
-* 2025 \- “Gap in critical exponents”, ‘The Ergodic Method in Group Theory’ conference \- Northwestern University.
-* 2025 \- “Random walk on homogeneous spaces”, Midrasha on Groups \- Weizmann Institute of Science, Israel.
-* 2025\- “Random walks on the space of lattices”, Mathematics Colloquium \- Tel-Aviv University, Israel.
+* 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- University of Huston Dynamical Systems Seminar.
+* 2026 \- “Horocycle-invariant measures on the moduli space of translation surfaces” \- University of Chicago Dynamics Seminar.
+* 2026 \- “Equidistribution of expanding horospheres in the space of translation surfaces” \- Joint IAS/PU Groups and Dynamics Seminar.
 * 2025 \- “Random walk on homogeneous spaces”, Groups & Dynamics \- Hebrew University of Jerusalem, Israel.
-* 2024 \- “Divergence of large dimensional diagonal orbits”, ‘Diagonal actions in the space of lattices’ workshop \- Ecole Polytechnique, Palaiseau, France.
-* 2024 \- “Gap in critical exponents of SL2(ℝ) orbits in nonarithmetic quotients of SL2(ℂ)”, ‘Group Actions with Hyperbolicity and Measure Rigidity’ workshop \- Institut Henri  Poincare, Paris, France.
-* 2024 \- “Gap in critical exponents of SL2(ℝ) orbits in nonarithmetic quotients of SL2(ℂ)”, ‘Distribution of orbits: Arithmetics and Dynamics’ workshop \- Paxmontana  Switzerland.
+* 2025\- “Random walks on the space of lattices”, Mathematics Colloquium \- Tel-Aviv University, Israel.
+* 2025 \- “Random walk on homogeneous spaces”, Midrasha on Groups \- Weizmann Institute of Science, Israel.
+* 2025 \- “Gap in critical exponents”, ‘The Ergodic Method in Group Theory’ conference \- Northwestern University.
+* 2025 \- “Critical exponent gap in hyperbolic geometry”, UC San Diego Group Actions Seminar.
+* 2025 \- “Returns in flat surface dynamics”, Tzafriri Talk \- Hebrew University of Jerusalem, Israel.
+* 2024 \- “Limits of compact diagonal orbits in the lattice space”, ‘Dynamics and Number Theory’ workshop \- Hebrew University of Jerusalem, Israel.
+* 2024 \- “Gap in critical exponents”, Joint IAS/PU Groups and Dynamics Seminar.
+* 2024 \- “Gap in critical exponents”, Group Actions, Geometry and Dynamics \- Yale University.
+* 2024 \- “Gap in critical exponents”, Dynamical Systems Seminar \- Penn State University.
 * 2024 \- “Gap in critical exponents”, ‘Recent Trends in Homogeneous and Teichmuller Dynamics’
 workshop \- Maryland.
-* 2024 \- “Gap in critical exponents”, Dynamical Systems Seminar \- Penn State University.
-* 2024 \- “Gap in critical exponents”, Group Actions, Geometry and Dynamics \- Yale University.
-* 2024 \- “Gap in critical exponents”, Joint IAS/PU Groups and Dynamics Seminar.
-* 2024 \- “Limits of compact diagonal orbits in the lattice space”, ‘Dynamics and Number Theory’ workshop \- Hebrew University of Jerusalem, Israel.
+* 2024 \- “Gap in critical exponents of SL2(ℝ) orbits in nonarithmetic quotients of SL2(ℂ)”, ‘Distribution of orbits: Arithmetics and Dynamics’ workshop \- Paxmontana  Switzerland.
+* 2024 \- “Gap in critical exponents of SL2(ℝ) orbits in nonarithmetic quotients of SL2(ℂ)”, ‘Group Actions with Hyperbolicity and Measure Rigidity’ workshop \- Institut Henri  Poincare, Paris, France.
+* 2024 \- “Divergence of large dimensional diagonal orbits”, ‘Diagonal actions in the space of lattices’ workshop \- Ecole Polytechnique, Palaiseau, France.
 * 2023 – “Limits of Compact Diagonal Orbits in the Lattice Space”, ‘Diophantine Analysis, Dynamics and Related Topics’ conference \- Technion, Israel.
 * 2022 \- “Algebraic Divergence and Geometry of Symmetric Spaces”, Groups & Dynamics Seminar \- Tel Aviv University, Israel.
-* 2021 \- “Parametric Geometry of Numbers with General Flows”, Diophantine Analysis and Related Topics, online conference.
 * 2021 \- “Geometry of the Casp and Divergent Trajectories”, Dynamics & Probability \- Hebrew University of Jerusalem, Israel.
+* 2021 \- “Parametric Geometry of Numbers with General Flows”, Diophantine Analysis and Related Topics, online conference.
 * 2017 \- “Stable and Well-Rounded Lattices in Diagonal Orbits” \- Action Now Wandering Seminar, Ben Gurion University, Israel.
 * 2015 \- “Divergent Trajectories in SL3(R)/SL3(Z)”, Dynamics & Probability \- Hebrew University of Jerusalem, Israel.
 
