@@ -3,6 +3,7 @@ layout: default
 ---
 
 [Home](./index.html) | [CV](./CV.html) | [Publication list](./publications.html)
+
 <!-- # Omri Solan publications: -->
 # Published:
 
