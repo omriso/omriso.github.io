@@ -6,13 +6,13 @@ layout: default
 
 # **Omri Nisan Solan \- CV**
 
-I am a Bourgain Fellow and an associate research scholar at Princeton University and at the Institute of Advanced Study.
+I am a Bourgain Fellow and an associate research scholar at Princeton University and at the Institute for Advanced Study.
 
 <!-- PDF version: [CV](./CV.pdf) -->
 
 ## **Employment:**
 
-* 2025 \- 2029: Bourgain Fellow and an associate research scholar at Princeton University and at the Institute of Advanced Study.
+* 2025 \- 2029: Bourgain Fellow and an Associate Research Scholar at Princeton University and at the Institute for Advanced Study.
 
 
 ## **Education:**
@@ -28,12 +28,13 @@ My primary research focus is on homogeneous dynamics. I leverage tools from numb
 
 ## **Teaching:** 
 
-* 2024 \- Teaching assistant, Hebrew University of Jerusalem, the course “Fundamental concepts in commutative algebra and algebraic geometry”.
-* 2023 \- Teaching assistant, Hebrew University of Jerusalem, the course “Fundamental concepts in spectral analysis”.
+* 2024 \- Teaching Assistant, Hebrew University of Jerusalem, the course “Fundamental concepts in commutative algebra and algebraic geometry”.
+* 2023 \- Teaching Assistant, Hebrew University of Jerusalem, the course “Fundamental concepts in spectral analysis”.
 
 ## **Awards:**
 
-* Nessyahu Prize in Mathematics, for excellent Ph.D. dissertations in the sciences (2026).
+* Nessyahu Prize in Mathematics, for excellent Ph.D. dissertations in the sciences (2026), awarded by the Israel Mathematical Union.
+* Aharon Katzir Prize for excellence in Ph.D. studies in experimental sciences in the Hebrew University (2026).    
 * Lior Tzafriri Award for excellence in Ph.D. studies (2025).
 * Award of excellence for Master's Studies Tel Aviv University (2021).
 * International Mathematics Competition for University Students, 2014, First Prize, 2015 Grand First Prize & Prize for special solution, 2017 First Prize.
