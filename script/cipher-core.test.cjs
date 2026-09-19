@@ -9,7 +9,8 @@ const core = require("../assets/js/cipher-core.js");
 const game = fs.readFileSync(path.join(__dirname, "../assets/js/cipher-game.js"), "utf8");
 const level = {
   key: JSON.parse(game.match(/key: ("[A-Z]+")/)[1]),
-  text: JSON.parse(game.match(/text: ("(?:[^"\\]|\\.)*")/)[1])
+  text: JSON.parse(game.match(/text: ("(?:[^"\\]|\\.)*")/)[1]),
+  boldWords: JSON.parse(game.match(/boldWords: (\[[^\]]*\])/)[1])
 };
 const puzzle = core.createPuzzle(level);
 
@@ -19,9 +20,17 @@ test("the first message decodes exactly, including final letters, punctuation, s
   }).join("")).join("")).join("\n");
   assert.equal(decoded, level.text);
   assert.equal(puzzle.paragraphs.length, 4);
-  assert.match(decoded, /\(שלא הגיע יחד עם שתי הכריות\)\./);
+  assert.match(decoded, /\(שלא הגיע עם שתי הכריות\)\./);
+  assert.match(decoded, /שמורכב מארבע אותיות/);
   assert.match(decoded, /בביתך\./);
   assert.match(decoded, /פתקים/);
+});
+
+test("the eight requested words stay bold in ciphertext and guesses, without emphasizing punctuation or the prefix of שבעה", () => {
+  const emphasizedWords = puzzle.paragraphs.flatMap((paragraph) => paragraph.filter((word) => word.tokens).map((word) => {
+    return word.tokens.filter((token) => token.emphasized).map((token) => core.displayGuess(puzzle.solution[token.cipher], token.final)).join("");
+  })).filter(Boolean);
+  assert.deepEqual(emphasizedWords, ["שמיני", "שבעה", "לשישה", "החמישי", "מארבע", "השלישי", "שתי", "אחת"]);
 });
 
 test("repeated letters use a stable bijective key; another level has an independent key", () => {

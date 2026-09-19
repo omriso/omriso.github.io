@@ -7,7 +7,8 @@
   const level = {
     id: "first-key-v1",
     key: "YQKXBRZFTNWAJHGPVUSMEC",
-    text: "מפתח שמיני מורכב משבעה מפתחות.\nהקודים לשישה מפתחות מוחבאים על פתקים בביתך.\nהחמישי, שמורכב בארבע אותיות, מוחבא בשק השלישי (שלא הגיע יחד עם שתי הכריות).\nזה כמובן, מפתח מספר אחת!"
+    text: "מפתח שמיני מורכב משבעה מפתחות.\nהקודים לשישה מפתחות מוחבאים על פתקים בביתך.\nהחמישי, שמורכב מארבע אותיות, מוחבא בשק השלישי (שלא הגיע עם שתי הכריות).\nזה כמובן, מפתח מספר אחת!",
+    boldWords: ["שמיני", "משבעה", "לשישה", "החמישי", "מארבע", "השלישי", "שתי", "אחת"]
   };
   const puzzle = core.createPuzzle(level);
   const storageKey = "eighth-key:" + level.id;
@@ -58,6 +59,7 @@
             const button = document.createElement("button");
             button.type = "button";
             button.className = "letter";
+            button.classList.toggle("emphasized", token.emphasized);
             button.dataset.cipher = token.cipher;
             button.setAttribute("aria-haspopup", "dialog");
             button.addEventListener("click", () => openLetter(token.cipher));
@@ -88,14 +90,12 @@
       button.setAttribute("aria-label", guess ? `${token.cipher} = ${shown}, שינוי ההחלפה` : `${token.cipher}, בחירת אות בעברית`);
     }
     const count = Object.keys(guesses).length;
-    $("key-count").textContent = count;
     $("progress-label").textContent = `${count} מתוך ${puzzle.used.length} אותיות הוחלפו`;
     $("progress").setAttribute("aria-valuemax", puzzle.used.length);
     $("progress").setAttribute("aria-valuenow", count);
     $("progress-fill").style.width = `${count / puzzle.used.length * 100}%`;
     const solved = core.isSolved(puzzle, guesses);
     $("completion").hidden = !solved;
-    document.querySelector(".level.current").classList.toggle("complete", solved);
     renderKey();
   }
 
@@ -203,6 +203,18 @@
   }
 
   $("open-key").addEventListener("click", () => keyDialog.showModal());
+  $("restart-game").addEventListener("click", () => {
+    guesses = {};
+    activeCipher = null;
+    returnToKey = false;
+    input.value = "";
+    $("letter-error").textContent = "";
+    input.removeAttribute("aria-invalid");
+    highlight(null);
+    persist();
+    update();
+    $("announcement").textContent = "כל ההחלפות נמחקו.";
+  });
   for (const dialog of [letterDialog, keyDialog]) {
     dialog.querySelector(".close-dialog").addEventListener("click", () => dialog.close());
     dialog.addEventListener("click", (event) => {

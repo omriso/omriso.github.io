@@ -26,7 +26,11 @@
       return { tokens: chars.map((char, index) => {
         const letter = normalize(char);
         if (!ALPHABET.includes(letter)) return { punctuation: char };
-        return { cipher: encoder[letter], final: !ALPHABET.includes(normalize(chars[index + 1] || " ")) };
+        const emphasized = (level.boldWords || []).some((boldWord) => {
+          const start = word.indexOf(boldWord);
+          return start !== -1 && index >= start && index < start + boldWord.length;
+        });
+        return { cipher: encoder[letter], final: !ALPHABET.includes(normalize(chars[index + 1] || " ")), emphasized };
       }) };
     }));
     const used = [...new Set(paragraphs.flatMap((paragraph) => paragraph.flatMap((word) => (word.tokens || []).map((token) => token.cipher).filter(Boolean))))].sort();

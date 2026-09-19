@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f5f2eb">
   <meta name="robots" content="noindex, nofollow">
-  <title>המפתח השמיני · מפתח ראשון</title>
+  <title>צופן</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' rx='12' fill='%23a44832'/%3E%3Ccircle cx='19' cy='18' r='7' fill='none' stroke='%23fffaf0' stroke-width='3'/%3E%3Cpath d='m24 23 12 12m-6-6 4-4m-1 7 4-4' fill='none' stroke='%23fffaf0' stroke-width='3'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="assets/css/cipher-game.css">
   <script src="assets/js/cipher-core.js" defer></script>
@@ -14,47 +14,32 @@
 <body>
   <svg class="svg-definitions" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <symbol id="icon-key" viewBox="0 0 24 24"><circle cx="8" cy="8" r="5"></circle><path d="m11.5 11.5 9 9m-6-6 3-3m0 6 3-3"></path></symbol>
+    <symbol id="icon-restart" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 2 8M3 4v6h6"></path></symbol>
     <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"></path></symbol>
     <symbol id="icon-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"></path></symbol>
   </svg>
 
   <div class="page-shell">
-    <header class="site-header">
-      <div class="brand"><svg class="icon brand-icon" aria-hidden="true"><use href="#icon-key"></use></svg><span>המפתח השמיני</span></div>
-      <span class="header-mark" aria-hidden="true">חידה בשבעה חלקים</span>
-    </header>
-
     <main>
-      <ol class="levels" aria-label="שבעת המפתחות">
-        <li class="level current" aria-current="step" aria-label="מפתח 1, השלב הנוכחי"><span>01</span></li>
-        <li class="level" aria-label="מפתח 2, עדיין לא זמין"><span>02</span></li>
-        <li class="level" aria-label="מפתח 3, עדיין לא זמין"><span>03</span></li>
-        <li class="level" aria-label="מפתח 4, עדיין לא זמין"><span>04</span></li>
-        <li class="level" aria-label="מפתח 5, עדיין לא זמין"><span>05</span></li>
-        <li class="level" aria-label="מפתח 6, עדיין לא זמין"><span>06</span></li>
-        <li class="level" aria-label="מפתח 7, עדיין לא זמין"><span>07</span></li>
-      </ol>
-
-      <div class="page-heading">
-        <div><p class="eyebrow">מפתח <bdi>01 / 07</bdi></p><h1>המפתח הראשון</h1></div>
-        <button id="open-key" class="key-button" type="button" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#icon-key"></use></svg><span>המפתח שלי</span><span id="key-count" class="key-count">0</span></button>
+      <div class="game-toolbar">
+        <button id="restart-game" class="key-button" type="button" aria-label="התחלה מחדש" title="התחלה מחדש"><svg class="icon" aria-hidden="true"><use href="#icon-restart"></use></svg></button>
+        <button id="open-key" class="key-button" type="button" aria-label="המפתח שלי" title="המפתח שלי" aria-haspopup="dialog"><svg class="icon" aria-hidden="true"><use href="#icon-key"></use></svg></button>
       </div>
 
       <section class="cipher-paper" aria-label="ההודעה המוצפנת">
-        <div class="paper-header"><span class="paper-label">הודעה מס׳ <bdi>01</bdi></span><span class="paper-ornament" aria-hidden="true">✳</span></div>
         <div id="cipher" class="cipher"></div>
         <noscript><p>יש להפעיל JavaScript כדי לפתוח את החידה.</p></noscript>
         <div class="paper-footer"><span id="progress-label">0 אותיות הוחלפו</span><div id="progress" class="progress" role="progressbar" aria-label="אותיות שהוחלפו" aria-valuemin="0" aria-valuenow="0" aria-valuemax="22"><span id="progress-fill"></span></div></div>
       </section>
 
-      <p id="completion" class="completion" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>המפתח הראשון בידך.</p>
+      <p id="completion" class="completion" role="status" hidden><svg class="icon" aria-hidden="true"><use href="#icon-check"></use></svg>הצופן פוענח.</p>
       <p id="storage-notice" class="storage-notice" role="status" hidden>השינויים נשמרים רק עד סגירת העמוד.</p>
-      <footer class="page-footer"><span aria-hidden="true">✦</span><span>אחד מתוך שבעה</span><span aria-hidden="true">✦</span></footer>
+      <img class="game-image" src="8%20to%201.png" alt="8 to 1" width="397" height="145" loading="lazy">
     </main>
   </div>
 
-  <dialog id="letter-dialog" class="letter-dialog" aria-labelledby="letter-title">
-    <div class="dialog-heading"><h2 id="letter-title">איזו אות מסתתרת כאן?</h2><button class="icon-button close-dialog" type="button" aria-label="סגירה"><svg class="icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div>
+  <dialog id="letter-dialog" class="letter-dialog" aria-label="החלפת אות">
+    <div class="dialog-toolbar"><button class="icon-button close-dialog" type="button" aria-label="סגירה"><svg class="icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div>
     <form id="letter-form" novalidate>
       <div class="letter-equation" dir="ltr"><span id="source-letter" class="source-letter"></span><span class="equals" aria-hidden="true">=</span><input id="hebrew-input" class="hebrew-input" type="text" lang="he" dir="rtl" inputmode="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="אות בעברית" aria-describedby="letter-error" placeholder="?" maxlength="2"></div>
       <div id="hebrew-keyboard" class="hebrew-keyboard" aria-label="אותיות בעברית"></div>
@@ -63,8 +48,8 @@
     </form>
   </dialog>
 
-  <dialog id="key-dialog" class="key-dialog" aria-labelledby="key-title">
-    <div class="dialog-heading"><h2 id="key-title">המפתח שלי</h2><button class="icon-button close-dialog" type="button" aria-label="סגירה"><svg class="icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div>
+  <dialog id="key-dialog" class="key-dialog" aria-label="המפתח שלי">
+    <div class="dialog-toolbar"><button class="icon-button close-dialog" type="button" aria-label="סגירה"><svg class="icon" aria-hidden="true"><use href="#icon-close"></use></svg></button></div>
     <div id="key-list" class="key-list"></div>
     <p id="empty-key" class="empty-key">עדיין אין החלפות</p>
   </dialog>
