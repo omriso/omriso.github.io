@@ -4,12 +4,20 @@
   const core = window.CipherCore;
   // Each future level gets its own id, text, and independent 22-letter key.
   // Final Hebrew forms share their regular letter's substitution.
-  const level = {
-    id: "first-key-v1",
-    key: "YQKXBRZFTNWAJHGPVUSMEC",
-    text: "מפתח שמיני מורכב משבעה מפתחות.\nהקודים לשישה מפתחות מוחבאים על פתקים בביתך.\nהחמישי, שמורכב מארבע אותיות, מוחבא בשק השלישי (שלא הגיע עם שתי הכריות).\nזה כמובן, מפתח מספר אחת!",
-    boldWords: ["שמיני", "משבעה", "לשישה", "החמישי", "מארבע", "השלישי", "שתי", "אחת"]
+  const levels = {
+    first: {
+      id: "first-key-v1",
+      key: "YQKXBRZFTNWAJHGPVUSMEC",
+      text: "מפתח שמיני מורכב משבעה מפתחות.\nהקודים לשישה מפתחות מוחבאים על פתקים בביתך.\nהחמישי, שמורכב מארבע אותיות, מוחבא בשק השלישי (שלא הגיע עם שתי הכריות).\nזה כמובן, מפתח מספר אחת!",
+      boldWords: ["שמיני", "משבעה", "לשישה", "החמישי", "מארבע", "השלישי", "שתי", "אחת"]
+    },
+    vush: {
+      id: "vush-v1",
+      key: "CMESUVPGHJAWNTFZRBXKQY",
+      text: "היינו בפריז וגם ברומא... 🎶\nאבל שם לא פגשנו את אבא או רון.\nהקוד הבא מסתתר יחד איתם, מאחורי נוף משגע."
+    }
   };
+  const level = levels[document.body.dataset.level || "first"];
   const puzzle = core.createPuzzle(level);
   const storageKey = "eighth-key:" + level.id;
   const $ = (id) => document.getElementById(id);
