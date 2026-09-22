@@ -6,12 +6,8 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");
 const core = require("../assets/js/cipher-core.js");
-const game = fs.readFileSync(path.join(__dirname, "../assets/js/cipher-game.js"), "utf8");
-const level = {
-  key: JSON.parse(game.match(/key: ("[A-Z]+")/)[1]),
-  text: JSON.parse(game.match(/text: ("(?:[^"\\]|\\.)*")/)[1]),
-  boldWords: JSON.parse(game.match(/boldWords: (\[[^\]]*\])/)[1])
-};
+const { keys, eighthKey, codes, levels } = require("../assets/js/cipher-levels.js");
+const level = levels.first;
 const puzzle = core.createPuzzle(level);
 
 test("the first message decodes exactly, including final letters, punctuation, spaces, and paragraphs", () => {
@@ -26,11 +22,82 @@ test("the first message decodes exactly, including final letters, punctuation, s
   assert.match(decoded, /פתקים/);
 });
 
-test("the eight requested words stay bold in ciphertext and guesses, without emphasizing punctuation or the prefix of שבעה", () => {
+test("the Sinai passage decodes exactly with verse labels, maqaf, and sof pasuq preserved", () => {
+  const expected = [
+    "כט",
+    "ויהי ברדת משה מהר סיני ושני לחת העדת ביד־משה ברדתו מן־ההר ומשה לא־ידע כי קרן עור פניו בדברו אתו׃",
+    "ל",
+    "וירא אהרן וכל־בני ישראל את־משה והנה קרן עור פניו וייראו מגשת אליו׃",
+    "לא",
+    "ויקרא אלהם משה וישבו אליו אהרן וכל־הנשאים בעדה וידבר משה אלהם׃"
+  ];
+  const sinaiPuzzle = core.createPuzzle(levels.sinai);
+  const decoded = sinaiPuzzle.paragraphs.map((paragraph) => paragraph.map((word) => word.space || word.tokens.map((token) => {
+    return token.punctuation ?? core.displayGuess(sinaiPuzzle.solution[token.cipher], token.final);
+  }).join("")).join(""));
+  assert.equal(sinaiPuzzle.paragraphs.length, 6);
+  assert.deepEqual(decoded, expected);
+  assert.deepEqual([decoded[0], decoded[2], decoded[4]], ["כט", "ל", "לא"]);
+  assert.equal(decoded.join("\n"), levels.sinai.text);
+  assert.equal(decoded.join("\n").match(/־/gu).length, 6);
+  assert.equal(decoded.join("\n").match(/׃/gu).length, 3);
+});
+
+test("clues retain their fixed physical target codes", () => {
+  assert.deepEqual([levels.first.target, levels.vush.target, levels.gift.target, levels.atmosphere.target, levels.sinai.target], ["VUSH", "BPKB", "LCT", "KWTG", "VSE"]);
+});
+
+test("the gift riddle decodes exactly, including both paragraphs and its parenthetical clue", () => {
+  const expected = "אמא שלי חשבה עלינו, ונתנה לנו מתנה. זו יצירה שאנחנו אוהבים מאוד, אבל המתנה ניתנה קצת באיחור, ולכן כמעט לא השתמשנו בה.\nבכל זאת, בתוכה נמצא הקוד הבא, במספר בעל משמעות לשנינו. (הידעת - הקוקטייל בכלל לא קשור לפיצה!)";
+  const current = core.createPuzzle(levels.gift);
+  const decoded = current.paragraphs.map((paragraph) => paragraph.map((word) => word.space || word.tokens.map((token) => {
+    return token.punctuation ?? core.displayGuess(current.solution[token.cipher], token.final);
+  }).join("")).join("")).join("\n");
+  assert.equal(current.paragraphs.length, 2);
+  assert.equal(levels.gift.text, expected);
+  assert.equal(decoded, expected);
+});
+
+test("the new atmosphere riddle preserves the supplied text exactly when decoded", () => {
+  const expected = "יש בבית זיכרונות שצברנו משנה לשנה ויש דברים שקשורים לשינה. הקוד הבא מוחבא מתחת למכשיר משונה, שביכולתו לשנות את האווירה בלחיצת כפתור. (בהתחלה החידה הייתה אמורה להיות מבוססת פינק-פלויד, אבל שיניתי אותה)";
+  const current = core.createPuzzle(levels.atmosphere);
+  const decoded = current.paragraphs.map((paragraph) => paragraph.map((word) => word.space || word.tokens.map((token) => {
+    return token.punctuation ?? core.displayGuess(current.solution[token.cipher], token.final);
+  }).join("")).join("")).join("\n");
+  assert.equal(levels.atmosphere.text, expected);
+  assert.equal(decoded, expected);
+});
+
+test("reassigned source pages open the intended riddles and keep the travel photos together", () => {
+  assert.equal(levels.vush.source, levels.first.target);
+  assert.equal(levels.gift.source, levels.vush.target);
+  assert.equal(levels.atmosphere.source, levels.gift.target);
+  assert.equal(levels.sinai.source, levels.atmosphere.target);
+  assert.equal(levels.kwtg.source, "KLN");
+  const sources = Object.values(levels).map((current) => current.source).filter(Boolean);
+  assert.equal(new Set(sources).size, sources.length);
+  for (const [name, current] of Object.entries(levels)) {
+    if (!current.source) continue;
+    assert.ok(codes.includes(current.source));
+    const html = fs.readFileSync(path.join(__dirname, "..", `${current.source}.html`), "utf8");
+    assert.match(html, new RegExp(`data-level="${name}"`));
+    assert.match(html, /src="assets\/js\/cipher-levels\.js"/);
+    for (const photo of ["from-tour-eifel.jpg", "from-coloseum.jpeg"]) {
+      assert.equal(html.includes(photo), name === "vush");
+    }
+  }
+  for (const code of codes.filter((code) => !sources.includes(code))) {
+    const html = fs.readFileSync(path.join(__dirname, "..", `${code}.html`), "utf8");
+    assert.match(html, /class="cipher-paper construction-notice"/);
+  }
+  assert.equal(levels.vush.text, "🎶 היינו בפריז וגם ברומא... 🎶\nאבל שם לא פגשנו את אבא או רון.\nהקוד הבא מסתתר יחד איתם, מאחורי נוף משגע.");
+});
+
+test("the eight configured words stay bold in ciphertext and guesses without emphasizing punctuation", () => {
   const emphasizedWords = puzzle.paragraphs.flatMap((paragraph) => paragraph.filter((word) => word.tokens).map((word) => {
     return word.tokens.filter((token) => token.emphasized).map((token) => core.displayGuess(puzzle.solution[token.cipher], token.final)).join("");
   })).filter(Boolean);
-  assert.deepEqual(emphasizedWords, ["שמיני", "שבעה", "לשישה", "החמישי", "מארבע", "השלישי", "שתי", "אחת"]);
+  assert.deepEqual(emphasizedWords, ["שמיני", "משבעה", "לשישה", "החמישי", "מארבע", "השלישי", "שתי", "אחת"]);
 });
 
 test("repeated letters use a stable bijective key; another level has an independent key", () => {
@@ -42,6 +109,72 @@ test("repeated letters use a stable bijective key; another level has an independ
   const other = core.createPuzzle({ key: [...level.key].reverse().join(""), text: level.text });
   assert.notDeepEqual(puzzle.solution, other.solution);
   assert.throws(() => core.createPuzzle({ key: "A".repeat(22), text: "א" }));
+});
+
+test("seven distinct substitution keys supply א through ש in the eighth key", () => {
+  assert.equal(keys.length, 7);
+  assert.equal(new Set(keys).size, 7);
+  for (const key of keys) {
+    assert.match(key, /^[A-Z]{22}$/);
+    assert.equal(new Set(key).size, 22);
+  }
+  const contributions = keys.map((key, index) => {
+    const start = index * 3;
+    const end = start + 3;
+    assert.equal(key.slice(start, end), eighthKey.slice(start, end));
+    return key.slice(start, end);
+  });
+  assert.equal(contributions.join(""), eighthKey.slice(0, 21));
+  assert.notEqual(keys[6][21], eighthKey[21], "the seventh key does not supply ת");
+});
+
+test("the eighth key preserves every requested Hebrew-to-Latin correspondence", () => {
+  const expected = {
+    א: "H", ב: "V", ג: "O", ד: "J", ה: "U", ו: "S", ז: "C", ח: "F",
+    ט: "E", י: "K", כ: "X", ל: "L", מ: "T", נ: "B", ס: "M", ע: "G",
+    פ: "Y", צ: "P", ק: "Z", ר: "W", ש: "N", ת: "D"
+  };
+  assert.deepEqual(Object.fromEntries([...core.ALPHABET].map((letter, index) => [letter, eighthKey[index]])), expected);
+});
+
+test("the 21 contributed letters decode all six codes without ת, including final letters", () => {
+  assert.deepEqual(codes, ["LCT", "VSE", "BPKB", "KLN", "VUSH", "KWTG"]);
+  const solution = Object.fromEntries(keys.flatMap((key, index) => {
+    const start = index * 3;
+    return [...key.slice(start, start + 3)].map((letter, offset) => [letter, core.ALPHABET[start + offset]]);
+  }));
+  assert.equal(Object.keys(solution).length, 21);
+  assert.equal(Object.values(solution).includes("ת"), false);
+  assert.equal(solution[eighthKey[21]], undefined);
+  const words = codes.map((code) => [...code].reverse().map((letter, index) => {
+    assert.ok(solution[letter], `the contributed letters must decode ${letter}`);
+    return core.displayGuess(solution[letter], index === code.length - 1);
+  }).join(""));
+  assert.deepEqual(words, ["מזל", "טוב", "ניצן", "שלי", "אוהב", "עמרי"]);
+});
+
+test("playable puzzles expose every letter needed for their contribution, in solve order", () => {
+  for (const [name, index] of [["first", 0], ["vush", 1], ["gift", 2], ["atmosphere", 3], ["sinai", 4], ["kwtg", 6]]) {
+    const current = levels[name];
+    assert.equal(current.key, keys[index]);
+    const currentPuzzle = core.createPuzzle(current);
+    const usedLetters = new Set(currentPuzzle.used.map((letter) => currentPuzzle.solution[letter]));
+    const contribution = core.ALPHABET.slice(index * 3, index * 3 + 3);
+    for (const letter of contribution) {
+      assert.ok(usedLetters.has(letter), `${name} must let the player discover ${letter}`);
+    }
+  }
+  assert.match(levels.kwtg.text, /ק[-–־]ש/, "the final instructions must stop at ש");
+});
+
+test("changed puzzle keys do not restore guesses saved under their previous keys", () => {
+  const previousIds = { first: "first-key-v1", vush: "vush-v4", atmosphere: "atmosphere-v2", sinai: "sinai-v1", kwtg: "kwtg-v1" };
+  for (const [name, previousId] of Object.entries(previousIds)) {
+    assert.ok(levels[name].id);
+    assert.notEqual(levels[name].id, previousId);
+  }
+  assert.equal(new Set(Object.keys(previousIds).map((name) => levels[name].id)).size, Object.keys(previousIds).length);
+  assert.equal(new Set(Object.values(levels).map((current) => current.id)).size, Object.keys(levels).length);
 });
 
 test("final Hebrew forms are normalized and only displayed at word endings", () => {
