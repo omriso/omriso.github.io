@@ -7,7 +7,7 @@
   const keys = [
     "HVOPNULGDMFCBYZWKSTJXE", // 1: א–ג → HVO (opening puzzle)
     "CXDJUSYZEWOTKGNLPVHFMB", // 2: ד–ו → JUS (Paris and Rome, VUSH)
-    "UPWHGDCFEOMJKTXNYVZSBL", // 3: ז–ט → CFE (gift riddle, BPKB)
+    "UPWHGDCFEOMJXZKNLVTSBY", // 3: ז–ט → CFE (gift riddle, BPKB); מ → X, ת → Y, נ → Z
     "CPTJUOSEYKXLGZWVDHBMFN", // 4: י–ל → KXL (atmosphere riddle, LCT)
     "LSGNHOVDUPJETBMYFZKXCW", // 5: מ–ס → TBM (Sinai passage, KWTG)
     "BUVEJDNOHZTFWSLGYPCMXK", // 6: ע–צ → GYP
@@ -39,7 +39,7 @@
       text: "🎶 היינו בפריז וגם ברומא... 🎶\nאבל שם לא פגשנו את אבא או רון.\nהקוד הבא מסתתר יחד איתם, מאחורי נוף משגע."
     },
     gift: {
-      id: "gift-v2",
+      id: "gift-v3",
       source: "BPKB",
       target: "LCT",
       key: keys[2],

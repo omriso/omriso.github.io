@@ -48,8 +48,11 @@ test("clues retain their fixed physical target codes", () => {
 });
 
 test("the gift riddle decodes exactly, including both paragraphs and its parenthetical clue", () => {
-  const expected = "אמא שלי חשבה עלינו, ונתנה לנו מתנה. זו יצירה שאנחנו אוהבים מאוד, אבל המתנה ניתנה קצת באיחור, ולכן כמעט לא השתמשנו בה.\nבכל זאת, בתוכה נמצא הקוד הבא, במספר בעל משמעות לשנינו. (הידעת - הקוקטייל בכלל לא קשור לפיצה!)";
+  const expected = "אמא שלי חשבה עלינו, ונתנה לנו מתנה. זו יצירה שאנחנו אוהבים מאוד, אבל המתנה ניתנה קצת באיחור, ולכן כמעט לא השתמשנו בה.\nבכל זאת, בתוכה נמצא הקוד הבא, במספר בעל משמעות לשנינו. (הידעת - הקוקטייל בכלל לא קשור לפיצה, הוא מטקסס או מקסיקו, והיא על שם מלכה (אחרת מזו שמוזכרת ביצירה, אבל עם שם דומה))";
   const current = core.createPuzzle(levels.gift);
+  assert.equal(current.solution.X, "מ");
+  assert.equal(current.solution.Y, "ת");
+  assert.equal(current.solution.Z, "נ");
   const decoded = current.paragraphs.map((paragraph) => paragraph.map((word) => word.space || word.tokens.map((token) => {
     return token.punctuation ?? core.displayGuess(current.solution[token.cipher], token.final);
   }).join("")).join("")).join("\n");
@@ -168,7 +171,7 @@ test("playable puzzles expose every letter needed for their contribution, in sol
 });
 
 test("changed puzzle keys do not restore guesses saved under their previous keys", () => {
-  const previousIds = { first: "first-key-v1", vush: "vush-v4", atmosphere: "atmosphere-v2", sinai: "sinai-v1", kwtg: "kwtg-v1" };
+  const previousIds = { first: "first-key-v1", vush: "vush-v4", gift: "gift-v2", atmosphere: "atmosphere-v2", sinai: "sinai-v1", kwtg: "kwtg-v1" };
   for (const [name, previousId] of Object.entries(previousIds)) {
     assert.ok(levels[name].id);
     assert.notEqual(levels[name].id, previousId);
