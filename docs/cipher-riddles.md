@@ -18,10 +18,10 @@ Data entry names identify riddles independently of their current source codes. T
 | Gift from Mom (`gift`) | `BPKB` | `LCT` | 3 | ז–ט |
 | Memories and sleep (`atmosphere`) | `LCT` | `KWTG` | 4 | י–ל |
 | Sinai passage, verses כט–לא (`sinai`) | `KWTG` | `VSE` | 5 | מ–ס |
+| Mirror (`mirror`) | `VSE` | `KLN` | 6 | ע–צ |
 | Final key instructions (`kwtg`) | `KLN` | None; final riddle | 7 | ק–ש |
 
-The confirmed opening sequence is `/cipher` → `VUSH` → `BPKB` → `LCT` → `KWTG` → `VSE`.
-The final riddle currently opens at `KLN`.
+All seven riddles are authored. The full confirmed sequence is `/cipher` → `VUSH` → `BPKB` → `LCT` → `KWTG` → `VSE` → `KLN`.
 
 The Paris and Rome riddle uses key 2 at `VUSH`, with its exact original clue text and two photographs. The memories and sleep riddle uses key 4 at `LCT`, with its exact supplied text and fixed target `KWTG`. Its text contains all three required letters: י, כ, and ל.
 
@@ -29,13 +29,13 @@ The gift riddle uses key 3 at `BPKB` and leads physically to `LCT`. Both supplie
 
 The Sinai passage opens at `KWTG` because the preceding memories and sleep riddle physically leads to that code. These source assignments preserve both riddles' fixed targets. The Sinai passage remains fifth, with its existing key and exact text.
 
-Only `VSE` still has an under-construction page, reserved for key 6. Its riddle text and physical target have not been specified. The provisional connection is `VSE` (position 6) → `KLN` (position 7). This connecting clue remains unwritten; the proposed route does not assign its physical target.
+The mirror riddle uses key 6 at `VSE` and leads physically to the final riddle at `KLN`. Its supplied text contains all three required letters: ע, פ, and צ.
 
 ## Moving a riddle
 
 1. Change its `source` and move its root HTML page to `NEWCODE.html`. Keep the page's `data-level` pointing to the same riddle entry.
 2. Preserve the riddle's text and `target`. Update this table with its new source.
-3. Check the route from the preceding riddle: its fixed target must match this riddle's new source. Reassign sources or fill unfinished riddles to connect the route; do not rewrite a physical target to force a sequence.
+3. Check the route from the preceding riddle: its fixed target must match this riddle's new source. Reassign sources to connect the route; do not rewrite a physical target to force a sequence.
 4. If the solve position changes, assign the key for that position and verify the player can recover every Hebrew letter contributed by that key. Bump the riddle's storage `id` if its key or text changes, so old guesses are not reused.
 
 The Sinai passage is assigned to position 5 and contains all three letters contributed by the fifth key: מ, נ, and ס. It lacks ז, so it cannot supply all of the third key's ז–ט group. Its exact text is preserved, its current source KWTG is editable, and its target VSE is fixed.

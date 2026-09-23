@@ -44,7 +44,7 @@ test("the Sinai passage decodes exactly with verse labels, maqaf, and sof pasuq 
 });
 
 test("clues retain their fixed physical target codes", () => {
-  assert.deepEqual([levels.first.target, levels.vush.target, levels.gift.target, levels.atmosphere.target, levels.sinai.target], ["VUSH", "BPKB", "LCT", "KWTG", "VSE"]);
+  assert.deepEqual([levels.first.target, levels.vush.target, levels.gift.target, levels.atmosphere.target, levels.sinai.target, levels.mirror.target], ["VUSH", "BPKB", "LCT", "KWTG", "VSE", "KLN"]);
 });
 
 test("the gift riddle decodes exactly, including both paragraphs and its parenthetical clue", () => {
@@ -71,14 +71,27 @@ test("the new atmosphere riddle preserves the supplied text exactly when decoded
   assert.equal(decoded, expected);
 });
 
-test("reassigned source pages open the intended riddles and keep the travel photos together", () => {
+test("the mirror riddle preserves the supplied text, punctuation, and final letters when decoded", () => {
+  const expected = "אתה חתיך ויפה! אני אוהב את האף שלך ואת העיניים שלך. אני אוהב את הלחיים שלך ואת החיוך שלך. יש מקום בבית שגם אתה יכול לראות את זה! בעצם די הרבה פעמים... מצד שמאל מתחת למשהו מוחבא מה שאתה מחפש.";
+  const current = core.createPuzzle(levels.mirror);
+  const decoded = current.paragraphs.map((paragraph) => paragraph.map((word) => word.space || word.tokens.map((token) => {
+    return token.punctuation ?? core.displayGuess(current.solution[token.cipher], token.final);
+  }).join("")).join("")).join("\n");
+  assert.equal(levels.mirror.text, expected);
+  assert.equal(decoded, expected);
+});
+
+test("all code pages form the complete riddle route and keep the travel photos together", () => {
   assert.equal(levels.vush.source, levels.first.target);
   assert.equal(levels.gift.source, levels.vush.target);
   assert.equal(levels.atmosphere.source, levels.gift.target);
   assert.equal(levels.sinai.source, levels.atmosphere.target);
-  assert.equal(levels.kwtg.source, "KLN");
+  assert.equal(levels.mirror.source, levels.sinai.target);
+  assert.equal(levels.kwtg.source, levels.mirror.target);
+  assert.equal(levels.kwtg.target, null);
   const sources = Object.values(levels).map((current) => current.source).filter(Boolean);
   assert.equal(new Set(sources).size, sources.length);
+  assert.deepEqual([...sources].sort(), [...codes].sort());
   for (const [name, current] of Object.entries(levels)) {
     if (!current.source) continue;
     assert.ok(codes.includes(current.source));
@@ -88,10 +101,6 @@ test("reassigned source pages open the intended riddles and keep the travel phot
     for (const photo of ["from-tour-eifel.jpg", "from-coloseum.jpeg"]) {
       assert.equal(html.includes(photo), name === "vush");
     }
-  }
-  for (const code of codes.filter((code) => !sources.includes(code))) {
-    const html = fs.readFileSync(path.join(__dirname, "..", `${code}.html`), "utf8");
-    assert.match(html, /class="cipher-paper construction-notice"/);
   }
   assert.equal(levels.vush.text, "🎶 היינו בפריז וגם ברומא... 🎶\nאבל שם לא פגשנו את אבא או רון.\nהקוד הבא מסתתר יחד איתם, מאחורי נוף משגע.");
 });
@@ -157,7 +166,7 @@ test("the 21 contributed letters decode all six codes without ת, including fina
 });
 
 test("playable puzzles expose every letter needed for their contribution, in solve order", () => {
-  for (const [name, index] of [["first", 0], ["vush", 1], ["gift", 2], ["atmosphere", 3], ["sinai", 4], ["kwtg", 6]]) {
+  for (const [name, index] of [["first", 0], ["vush", 1], ["gift", 2], ["atmosphere", 3], ["sinai", 4], ["mirror", 5], ["kwtg", 6]]) {
     const current = levels[name];
     assert.equal(current.key, keys[index]);
     const currentPuzzle = core.createPuzzle(current);

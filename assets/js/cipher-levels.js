@@ -10,18 +10,17 @@
     "UPWHGDCFEOMJXZKNLVTSBY", // 3: ז–ט → CFE (gift riddle, BPKB); מ → X, ת → Y, נ → Z
     "CPTJUOSEYKXLGZWVDHBMFN", // 4: י–ל → KXL (atmosphere riddle, LCT)
     "LSGNHOVDUPJETBMYFZKXCW", // 5: מ–ס → TBM (Sinai passage, KWTG)
-    "BUVEJDNOHZTFWSLGYPCMXK", // 6: ע–צ → GYP
+    "BUVEJDNOHZTFWSLGYPCMXK", // 6: ע–צ → GYP (mirror riddle, VSE)
     "DLBCTKMPXEVUYGFJOSZWNH"  // 7: ק–ש → ZWN (final riddle, KLN); ת → H is not contributed
   ];
   const eighthKey = "HVOJUSCFEKXLTBMGYPZWND";
   const codes = ["LCT", "VSE", "BPKB", "KLN", "VUSH", "KWTG"];
 
-  // The remaining clue for puzzle 6 can use keys[5] when supplied.
   // Put code pages at the site root as CODE.html to serve them at /CODE.
   // Each clue must contain its contributed Hebrew letters so they can be solved.
   // source is the editable entry code; target is fixed by the physical clue.
   // null source means the opening page; null target means the final riddle.
-  // Routing constraints and the unfinished sequence are documented in docs/cipher-riddles.md.
+  // Routing constraints and the full sequence are documented in docs/cipher-riddles.md.
   const levels = {
     first: {
       id: "first-key-v2",
@@ -58,6 +57,13 @@
       target: "VSE",
       key: keys[4],
       text: "כט\nויהי ברדת משה מהר סיני ושני לחת העדת ביד־משה ברדתו מן־ההר ומשה לא־ידע כי קרן עור פניו בדברו אתו׃\nל\nוירא אהרן וכל־בני ישראל את־משה והנה קרן עור פניו וייראו מגשת אליו׃\nלא\nויקרא אלהם משה וישבו אליו אהרן וכל־הנשאים בעדה וידבר משה אלהם׃"
+    },
+    mirror: {
+      id: "mirror-v1",
+      source: "VSE",
+      target: "KLN",
+      key: keys[5],
+      text: "אתה חתיך ויפה! אני אוהב את האף שלך ואת העיניים שלך. אני אוהב את הלחיים שלך ואת החיוך שלך. יש מקום בבית שגם אתה יכול לראות את זה! בעצם די הרבה פעמים... בצד שמאל מתחת למשהו מוחבא מה שאתה מחפש."
     },
     kwtg: {
       id: "kwtg-v2",
