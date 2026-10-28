@@ -25,8 +25,10 @@ for(let i=0;i<8;i++){
 }
 const cells=nodes.get('layers').children.flatMap(layer=>layer.children[1].children);
 const cube=config.layers.flat().join('');
-for(let i=0;i<3;i++){cells[i].value=cube[i];cells[i].handlers.input({isComposing:false});}
+const finalForms={'מ':'ם','נ':'ן','כ':'ך','פ':'ף','צ':'ץ'};
+for(let i=0;i<3;i++){cells[i].value=finalForms[cube[i]]||cube[i];cells[i].handlers.input({isComposing:false});}
 assert.equal(cells.filter(el=>el.disabled).length,3);
+assert.equal(cells[0].value,'מ','Confirmed final mem becomes ordinary mem');
 assert.match(nodes.get('cube-progress').textContent,/1 מתוך 27/);
 assert.ok(!fs.readFileSync('cube-crossword.html','utf8').includes('id="reset"'));
 assert.ok(!nodes.get('completion').open);
@@ -37,9 +39,10 @@ for(let i=8;i<27;i++){
 assert.ok(!nodes.get('completion').open,'Clues alone must not trigger completion');
 for(let i=0;i<27;i++){
   if(cells[i].disabled)continue;
-  cells[i].value=cube[i];cells[i].handlers.input({isComposing:false});
+  cells[i].value=finalForms[cube[i]]||cube[i];cells[i].handlers.input({isComposing:false});
 }
 assert.equal(nodes.get('completion').open,true);
+assert.ok(cells.every(cell=>!/[םןךףץ]/.test(cell.value)),'All confirmed cells use ordinary letter forms');
 assert.equal(nodes.get('completion').openCount,1);
 assert.match(nodes.get('completion-picture').src,/1e4kVPqLeYMOOTSGkUWdgOjnarJPg1rAf\/preview$/);
 console.log('Automatic clue/cube confirmation checks passed; restart button removed.');

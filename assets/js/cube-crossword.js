@@ -75,6 +75,7 @@
       const already=E.lines.map((line,i)=>line.every(j=>state.locked.includes(j))?i:-1).filter(i=>i>=0);
       const chosen=[...already,...match.matched.filter(i=>!already.includes(i))].slice(0,next);
       state.locked=[...new Set([...state.locked,...chosen.flatMap(i=>E.lines[i])])];state.words=next;
+      state.locked.forEach(i=>{state.letters[i]=E.normalize(state.letters[i]);});
       $('cube-status').textContent=next===27?'הקובייה הושלמה! כל 27 המילים במקום.':`נכון! ${next-n} מילים נוספות אושרו. האותיות שלהן ננעלו.`;save();update();
     }
     if(state.words>n && state.words<27)checkCube();
