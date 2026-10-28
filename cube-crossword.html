@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>תשבץ בשלושה ממדים</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f7f3ea;color:#243d36;font-family:system-ui,sans-serif}main{max-width:1150px;margin:auto;padding:40px 22px}header{border-bottom:1px solid #cfcfc0;padding-bottom:26px;margin-bottom:26px}.eyebrow{color:#957136;font-size:14px;letter-spacing:2px}h1{font-size:clamp(32px,6vw,60px);margin:10px 0}p{line-height:1.8}.intro{max-width:750px;color:#57675e}.layout{display:grid;grid-template-columns:1.1fr 1fr;gap:30px}section{background:#fffdf7;border:1px solid #deded0;border-radius:18px;padding:24px}h2{margin-top:0}.clues{display:grid;gap:10px}.clue{display:grid;grid-template-columns:26px 1fr 100px;align-items:center;gap:8px}.number{color:#8c957f;font-size:13px}input{font:inherit;border:1px solid #c8cdbf;border-radius:7px;background:white;color:#243d36;padding:9px;min-width:0}input:focus{outline:3px solid #d8ad64}input:disabled{opacity:1;background:#e0eee4;border-color:#78a489;color:#245e3b}.layers{display:flex;flex-wrap:wrap;gap:20px;justify-content:center}.layer{text-align:center}.grid{display:grid;grid-template-columns:repeat(3,54px);gap:5px}.cell{width:54px;height:54px;text-align:center;font-size:27px;padding:0}.layer h3{font-size:15px;font-weight:500}button{font:inherit;background:#284e40;color:white;border:0;border-radius:8px;padding:12px 20px;cursor:pointer;margin-top:16px}button:focus-visible{outline:3px solid #d8ad64}button.secondary{background:transparent;color:#57675e;border:1px solid #bbc5b7}.status{min-height:54px;color:#35654c;line-height:1.7;margin-top:12px}.progress{font-size:14px;color:#687668}.hidden{display:none!important}footer{margin-top:28px;color:#6e786d;font-size:13px}#setup{max-width:720px}#setup input{width:100%}@media(max-width:780px){.layout{grid-template-columns:1fr}main{padding:24px 14px}section{padding:18px}.clue{grid-template-columns:22px 1fr 90px}}
+</style>
+</head>
+<body><main>
+<header><div class="eyebrow">27 הגדרות · 27 אותיות · קובייה אחת</div><h1>תשבץ בשלושה ממדים</h1><p class="intro">כל תשובה בת שלוש אותיות. פתרו את ההגדרות ושבצו את המילים בקובייה: בכל שורה, בכל עמודה וגם בין השכבות. ההגדרות מעורבבות; הגדרות זהות יכולות לקבל תשובות שונות.</p><p class="intro">האישור מגיע בשלושה שלבים, בנפרד להגדרות ולקובייה: מילה אחת, עוד שבע, ואז כל תשע־עשרה הנותרות. רק קבוצה שלמה מקבלת אישור וננעלת. בשלב הביניים לא ייחשפו המילים שכבר נכונות.</p><p class="intro">הבדיקה אוטומטית בזמן ההקלדה — אין צורך ללחוץ על Enter.</p><button id="reset" class="secondary" type="button">התחלה מחדש · איפוס מלא</button></header>
+<section id="setup"><h2>החידה עוד בהכנה</h2><p>יש לטעון את ההגדרות ואת פתרון הקובייה כדי להתחיל.</p><details><summary>טעינת חידה למכין המשחק</summary><p>בחרו קובץ JSON בפורמט המתואר בקובץ ההוראות של המשחק.</p><input type="file" id="load" accept=".json,application/json" aria-label="קובץ החידה"><p id="error" role="alert"></p></details></section>
+<div id="game" class="layout hidden"><section><h2>ההגדרות</h2><p class="progress" id="clue-progress"></p><div id="clues" class="clues"></div><div id="clue-status" class="status" role="status" aria-live="polite"></div></section>
+<section><h2>הקובייה</h2><p>קוראים שורות מימין לשמאל, עמודות מלמעלה למטה, ועומק משכבה 1 לשכבה 3. אותה משבצת בכל שלוש השכבות יוצרת מילה.</p><p class="progress" id="cube-progress"></p><div id="layers" class="layers"></div><div id="cube-status" class="status" role="status" aria-live="polite"></div></section></div>
+<footer>ההתקדמות נשמרת בדפדפן הזה, כששמירה מקומית זמינה.</footer>
+</main>
+<script src="assets/js/cube-crossword-engine.js"></script>
+<script src="assets/js/cube-crossword-data.js"></script>
+<script src="assets/js/cube-crossword.js"></script>
+</body></html>
