@@ -8,16 +8,16 @@ layout: default
 
 I study homogeneous dynamics.
 
-I have finished my Ph.D. studies in the Hebrew University of Jerusalem under the supervision of Prof. Elon Lindenstrauss. 
-Starting at Fall 2025, I will be an associate research scholar at Princeton University and a Bourgain Fellow at the Institute of Advanced Study.
+I have finished my Ph.D. studies at the Hebrew University of Jerusalem under the supervision of Prof. Elon Lindenstrauss. 
+Since Fall 2025, I have been an Associate Research Scholar at Princeton University and a Bourgain Fellow at the Institute for Advanced Study.
 
 You can interest me in questions related to dynamics with number theory, geometry, topology, and probability.
 
 ## Contact
 
-**Email:** omrinisan dot solan at mail dot huji dot ac dot il
+**Email:** os4293 at princeton...
 
-**Office:** Ross building, floor -1, room 63
+**Office:** Fine Hall, floor 6, room 609
 
 <!-- Text can be **bold**, _italic_, or ~~strikethrough~~.
 
