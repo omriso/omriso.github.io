@@ -2,6 +2,7 @@
   'use strict';
   const E=window.CubeCrossword, $=id=>document.getElementById(id);
   let data, candidates, inputs=[], cells=[], state, key;
+  let completionShown=false;
   const target=n=>n<1?1:n<8?8:27;
   const blank=()=>({answers:Array(27).fill(''),letters:Array(27).fill(''),clues:[],locked:[],words:0});
   function save(){try{localStorage.setItem(key,JSON.stringify(state));}catch{}}
@@ -11,10 +12,17 @@
     for(const [kind,n] of [['clue',state.clues.length],['cube',state.words]]) {
       $(kind+'-progress').textContent=n===27?'הושלם · 27 מתוך 27':`${n} מתוך 27 אושרו · האישור הבא ב־${target(n)}`;
     }
+    if(state.clues.length===27 && state.words===27 && !completionShown){
+      completionShown=true;
+      $('completion-picture').src='https://drive.google.com/file/d/1e4kVPqLeYMOOTSGkUWdgOjnarJPg1rAf/preview';
+      $('completion').showModal();
+    }
   }
   function start(config){
     const cube=E.validate(config);
-    data=config;candidates=E.orientations(cube,data.reflections!==false);
+    completionShown=false;
+    $('completion').close();
+    data=config;candidates=E.orientations(cube,data.reflections!==false,data.preserveDirections===true);
     key='cube-crossword:'+JSON.stringify(data);state=blank();
     try{
       const old=JSON.parse(localStorage.getItem(key));
@@ -71,7 +79,6 @@
     }
     if(state.words>n && state.words<27)checkCube();
   }
-  $('reset').addEventListener('click',()=>{if(!state)return;state=blank();save();update();$('clue-status').textContent='';$('cube-status').textContent='';inputs[0]?.focus();});
   $('load').addEventListener('change',async event=>{try{const file=event.target.files[0];if(file)start(JSON.parse(await file.text()));}catch(error){$('error').textContent=error.message;}});
   if(window.CUBE_CROSSWORD_DATA){try{start(window.CUBE_CROSSWORD_DATA);}catch(error){$('error').textContent=error.message;}}
 })();

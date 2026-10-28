@@ -11,6 +11,7 @@ with an object like this (all 27 actual clues are required):
 {
   id: "brother-cube-v1",
   reflections: true,
+  preserveDirections: true,
   layers: [
     ["אבג", "דהו", "זחט"],
     ["יכל", "מנס", "עפצ"],
@@ -38,10 +39,13 @@ with any static client-side puzzle.
 
 Both panels confirm at cumulative totals 1, 8, and 27. Checks between checkpoints
 give no per-answer correctness feedback. Confirmed clues and letters lock.
-Cube checks consider all 48 axis permutations/reflections (24 rotations when
-`reflections: false`), always with a single orientation consistent with the
+The current puzzle sets `preserveDirections: true`: cube checks accept only the
+six axis permutations with no axis reversed. Every answer reads right to left,
+top to bottom, or down the layers. Without this option, checks consider all 48
+axis permutations/reflections (24 rotations when `reflections: false`). Checks
+always use a single orientation consistent with the
 locked cells. A fully filled incidental line through locked cells also counts
 as correct at the next checkpoint. Progress is local to the browser and puzzle
-content. The reset button requires confirmation.
+content.
 
 Run the logic checks with `node tests/cube-crossword.test.cjs`.

@@ -6,11 +6,12 @@
   for (let axis=0; axis<3; axis++) for(let a=0;a<3;a++) for(let b=0;b<3;b++) {
     lines.push([0,1,2].map(t => { const p=[]; p[axis]=t; p[(axis+1)%3]=a; p[(axis+2)%3]=b; return index(...p); }));
   }
-  function orientations(cube, reflections=true) {
+  function orientations(cube, reflections=true, preserveDirections=false) {
     const result=[];
     for(const p of [[0,1,2],[0,2,1],[1,0,2],[1,2,0],[2,0,1],[2,1,0]]) {
       const parity = ((p[0]>p[1])+(p[0]>p[2])+(p[1]>p[2]))%2 ? -1:1;
       for(let mask=0;mask<8;mask++) {
+        if(preserveDirections && mask!==0) continue;
         const signs=[0,1,2].map(i=>mask&(1<<i)?-1:1);
         if(!reflections && parity*signs.reduce((a,b)=>a*b,1)<0) continue;
         const out=[];

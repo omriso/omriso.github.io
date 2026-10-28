@@ -1,7 +1,8 @@
-// Fixed shuffled order; first three clues stay first and captain clues stay together.
+// Fixed shuffled order; first three clues stay first; captain and שנה clues are grouped.
 window.CUBE_CROSSWORD_DATA = {
   "id": "brother-cube-v1",
   "reflections": true,
+  "preserveDirections": true,
   "layers": [
     [
       "מזל",
@@ -78,6 +79,10 @@ window.CUBE_CROSSWORD_DATA = {
     },
     {
       "answer": "שנה",
+      "text": "אחת מתוך עשרים ושבע"
+    },
+    {
+      "answer": "שנה",
       "text": "שנייה מתוך עשרים ושבע"
     },
     {
@@ -115,10 +120,6 @@ window.CUBE_CROSSWORD_DATA = {
     {
       "answer": "זנב",
       "text": "עצם"
-    },
-    {
-      "answer": "שנה",
-      "text": "אחת מתוך עשרים ושבע"
     },
     {
       "answer": "ממש",
