@@ -35,7 +35,7 @@ window.CUBE_CROSSWORD_DATA = {
     },
     {
       "answer": "קבן",
-      "text": "רואים אותו כדי לצאת"
+      "text": "רואים אותו כדי לצאת (ר\"ת)"
     },
     {
       "answer": "הבט",
@@ -119,7 +119,7 @@ window.CUBE_CROSSWORD_DATA = {
     },
     {
       "answer": "זנב",
-      "text": "עצם"
+      "text": "עצם ה-"
     },
     {
       "answer": "ממש",

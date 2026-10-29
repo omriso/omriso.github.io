@@ -4,13 +4,14 @@
   let data, candidates, inputs=[], cells=[], state, key;
   let completionShown=false;
   const target=n=>n<1?1:n<8?8:27;
+  const clueTarget=n=>[1,8,14,20,27].find(checkpoint=>checkpoint>n)??27;
   const blank=()=>({answers:Array(27).fill(''),letters:Array(27).fill(''),clues:[],locked:[],words:0});
   function save(){try{localStorage.setItem(key,JSON.stringify(state));}catch{}}
   function update(){
     inputs.forEach((el,i)=>{el.value=state.answers[i];el.disabled=state.clues.includes(i);});
     cells.forEach((el,i)=>{el.value=state.letters[i];el.disabled=state.locked.includes(i);});
     for(const [kind,n] of [['clue',state.clues.length],['cube',state.words]]) {
-      $(kind+'-progress').textContent=n===27?'הושלם · 27 מתוך 27':`${n} מתוך 27 אושרו · האישור הבא ב־${target(n)}`;
+      $(kind+'-progress').textContent=n===27?'הושלם · 27 מתוך 27':`${n} מתוך 27 אושרו · האישור הבא ב־${kind==='clue'?clueTarget(n):target(n)}`;
     }
     if(state.clues.length===27 && state.words===27 && !completionShown){
       completionShown=true;
@@ -23,10 +24,18 @@
     completionShown=false;
     $('completion').close();
     data=config;candidates=E.orientations(cube,data.reflections!==false,data.preserveDirections===true);
-    key='cube-crossword:'+JSON.stringify(data);state=blank();
+    // Use a stable puzzle ID so wording changes never reset saved progress.
+    key='cube-crossword:progress:'+data.id;state=blank();
     try{
-      const old=JSON.parse(localStorage.getItem(key));
-      if(old && old.answers?.length===27 && old.letters?.length===27 && old.answers.every(v=>typeof v==='string') && old.letters.every(v=>typeof v==='string') && Array.isArray(old.clues) && Array.isArray(old.locked) && [0,1,8,27].includes(old.words) && [0,1,8,27].includes(old.clues.length) && [...old.clues,...old.locked].every(i=>Number.isInteger(i)&&i>=0&&i<27))state=old;
+      const legacyData=JSON.parse(JSON.stringify(data));
+      if(data.id==='brother-cube-v1'){
+        legacyData.clues[3].text='רואים אותו כדי לצאת';
+        legacyData.clues[24].text='עצם';
+      }
+      // Read the previous content-based keys without deleting or changing them.
+      const saved=localStorage.getItem(key)??localStorage.getItem('cube-crossword:'+JSON.stringify(data))??localStorage.getItem('cube-crossword:'+JSON.stringify(legacyData));
+      const old=JSON.parse(saved);
+      if(old && old.answers?.length===27 && old.letters?.length===27 && old.answers.every(v=>typeof v==='string') && old.letters.every(v=>typeof v==='string') && Array.isArray(old.clues) && Array.isArray(old.locked) && [0,1,8,27].includes(old.words) && [0,1,8,14,20,27].includes(old.clues.length) && [...old.clues,...old.locked].every(i=>Number.isInteger(i)&&i>=0&&i<27))state=old;
     }catch{}
     inputs=[];cells=[];$('clues').replaceChildren();$('layers').replaceChildren();
     data.clues.forEach((clue,i)=>{
@@ -60,7 +69,7 @@
   }
   function checkClues(){
     const n=state.clues.length;if(n===27)return;
-    const matched=E.clueMatches(data.clues,state.answers),next=target(n);
+    const matched=E.clueMatches(data.clues,state.answers),next=clueTarget(n);
     if(matched.size>=next && state.clues.every(i=>matched.has(i))){
       const fresh=[...matched].filter(i=>!state.clues.includes(i)).slice(0,next-n);
       state.clues.push(...fresh);$('clue-status').textContent=next===27?'כל ההגדרות נכונות!':`נכון! ${next-n} תשובות נוספות אושרו וננעלו.`;save();update();

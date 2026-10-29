@@ -35,6 +35,7 @@ assert.ok(!nodes.get('completion').open);
 for(let i=8;i<27;i++){
   clues[i].value=config.clues[i].answer;
   clues[i].handlers.input({isComposing:false});
+  assert.equal(clues.filter(el=>el.disabled).length,i<13?8:i<19?14:i<26?20:27);
 }
 assert.ok(!nodes.get('completion').open,'Clues alone must not trigger completion');
 for(let i=0;i<27;i++){
@@ -47,3 +48,25 @@ assert.equal(nodes.get('completion').openCount,1);
 assert.match(nodes.get('completion-picture').src,/1e4kVPqLeYMOOTSGkUWdgOjnarJPg1rAf\/preview$/);
 console.log('Automatic clue/cube confirmation checks passed; restart button removed.');
 console.log('Completion picture popup appears once after both panels are finished.');
+
+// A clue wording update must retain progress from the old content-based key.
+const legacyConfig=JSON.parse(JSON.stringify(config));
+legacyConfig.clues[3].text='רואים אותו כדי לצאת';
+legacyConfig.clues[24].text='עצם';
+const legacyKey='cube-crossword:'+JSON.stringify(legacyConfig);
+const legacyProgress=JSON.stringify({answers:config.clues.map((c,i)=>i<8?c.answer:''),letters:Array(27).fill(''),clues:[0,1,2,3,4,5,6,7],locked:[],words:0});
+storage.clear();storage.set(legacyKey,legacyProgress);
+vm.runInContext(fs.readFileSync('assets/js/cube-crossword.js','utf8'),context);
+let restored=nodes.get('clues').children.map(row=>row.children[2]);
+assert.equal(restored.filter(el=>el.disabled).length,8);
+assert.equal(restored[3].value,config.clues[3].answer);
+assert.equal(storage.get(legacyKey),legacyProgress);
+for(let i=8;i<14;i++){restored[i].value=config.clues[i].answer;restored[i].handlers.input({isComposing:false});}
+assert.equal(restored.filter(el=>el.disabled).length,14);
+assert.equal(storage.get(legacyKey),legacyProgress,'Existing save remains untouched');
+vm.runInContext(fs.readFileSync('assets/js/cube-crossword.js','utf8'),context);
+restored=nodes.get('clues').children.map(row=>row.children[2]);
+assert.equal(restored.filter(el=>el.disabled).length,14,'New checkpoint survives reload');
+assert.equal(config.clues[3].text,'רואים אותו כדי לצאת (ר"ת)');
+assert.equal(config.clues[24].text,'עצם ה-');
+console.log('New checkpoints and legacy saved progress preservation checks passed.');
